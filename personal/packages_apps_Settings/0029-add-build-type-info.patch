@@ -1,0 +1,56 @@
+From 69c9085cdab09ba07518e474a464bb1d978732e1 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Mon, 26 Apr 2021 15:10:44 -0400
+Subject: [PATCH 29/31] add build type info
+
+---
+ res/values-ru/custom_strings.xml | 3 +++
+ res/values/custom_strings.xml    | 3 +++
+ res/xml/firmware_version.xml     | 7 +++++++
+ 3 files changed, 13 insertions(+)
+
+diff --git a/res/values-ru/custom_strings.xml b/res/values-ru/custom_strings.xml
+index d2ee46f09a..dff1fbcc85 100644
+--- a/res/values-ru/custom_strings.xml
++++ b/res/values-ru/custom_strings.xml
+@@ -46,4 +46,7 @@
+     <!-- Notification headers -->
+     <string name="notification_headers_title">Заголовки уведомлений</string>
+     <string name="notification_headers_summary">Показывать заголовки в списке уведомлений\nТребуется перезапуск SystemUI</string>
++    <!-- ROM type -->
++    <string name="rom_maintainer">Сопровождающий: eternityson</string>
++    <string name="rom_type_title">Тип сборки: phhGSI v316</string>
+ </resources>
+diff --git a/res/values/custom_strings.xml b/res/values/custom_strings.xml
+index 4303588848..29e5333702 100644
+--- a/res/values/custom_strings.xml
++++ b/res/values/custom_strings.xml
+@@ -41,4 +41,7 @@
+     <!-- Notification headers -->
+     <string name="notification_headers_title">Notification Headers</string>
+     <string name="notification_headers_summary">Show headers in the notification shade\nRequires a SystemUI restart</string>
++    <!-- ROM type -->
++    <string name="rom_maintainer">Maintainer: eternityson</string>
++    <string name="rom_type_title">Type: phhGSI v316</string>
+ </resources>
+diff --git a/res/xml/firmware_version.xml b/res/xml/firmware_version.xml
+index efc21f5ade..a5bc3d23e8 100644
+--- a/res/xml/firmware_version.xml
++++ b/res/xml/firmware_version.xml
+@@ -61,6 +61,13 @@
+         settings:enableCopying="true"
+         settings:controller="com.android.settings.deviceinfo.firmwareversion.LineageApiVersionPreferenceController"/> -->
+ 
++    <!-- ROM type -->
++    <Preference
++        android:key="crdrom_build_type"
++        android:title="@string/rom_maintainer"
++        android:summary="@string/rom_type_title"
++        settings:enableCopying="true"/>
++
+     <!-- Security patch -->
+     <Preference
+         android:key="security_key"
+-- 
+2.25.1
+

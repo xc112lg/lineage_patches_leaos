@@ -1,0 +1,117 @@
+From a59f68c563ff585a4a865fd6f259d5c39b5e9045 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 28 Feb 2021 04:00:56 -0500
+Subject: [PATCH] Revert "Settings: Add screen off fod [2/2]"
+
+This reverts commit 899f3fa1edaeb85bf5ab921bd65adf85f45ba6d5.
+---
+ res/values/lineage_config.xml                 |  3 --
+ res/xml/screen_lock_settings.xml              |  7 ---
+ .../screenlock/ScreenLockSettings.java        |  1 -
+ .../ScreenOffFodPreferenceController.java     | 52 -------------------
+ 4 files changed, 63 deletions(-)
+ delete mode 100644 src/com/android/settings/security/screenlock/ScreenOffFodPreferenceController.java
+
+diff --git a/res/values/lineage_config.xml b/res/values/lineage_config.xml
+index 71d25571f7..a9e760ff5a 100644
+--- a/res/values/lineage_config.xml
++++ b/res/values/lineage_config.xml
+@@ -32,9 +32,6 @@
+     <!-- Whether to show min/max refresh rate in display settings -->
+     <bool name="config_show_refresh_rate_controls">false</bool>
+ 
+-    <!-- Screen off FOD -->
+-    <bool name="config_supportScreenOffFod">true</bool>
+-
+     <!-- Battery Health -->
+     <string name="config_batteryCalculatedCapacity">/sys/class/power_supply/bms/charge_full</string>
+     <string name="config_batteryDesignCapacity">/sys/class/power_supply/bms/charge_full_design</string>
+diff --git a/res/xml/screen_lock_settings.xml b/res/xml/screen_lock_settings.xml
+index f47bab1a14..db66cb9244 100644
+--- a/res/xml/screen_lock_settings.xml
++++ b/res/xml/screen_lock_settings.xml
+@@ -60,11 +60,4 @@
+         android:title="@string/unlock_quick_unlock_control_title"
+         android:summary="@string/unlock_quick_unlock_control_summary" />
+ 
+-    <com.crdroid.settings.preferences.SystemSettingSwitchPreference
+-        android:key="fod_gesture"
+-        android:title="@string/fod_gesture_title"
+-        android:summary="@string/fod_gesture_summary"
+-        android:defaultValue="false"
+-        settings:controller="com.android.settings.security.screenlock.ScreenOffFodPreferenceController" />
+-
+ </PreferenceScreen>
+diff --git a/src/com/android/settings/security/screenlock/ScreenLockSettings.java b/src/com/android/settings/security/screenlock/ScreenLockSettings.java
+index 25ce91870c..4d15776695 100644
+--- a/src/com/android/settings/security/screenlock/ScreenLockSettings.java
++++ b/src/com/android/settings/security/screenlock/ScreenLockSettings.java
+@@ -83,7 +83,6 @@ public class ScreenLockSettings extends DashboardFragment
+                 context, MY_USER_ID, lockPatternUtils));
+         controllers.add(new QuickUnlockPreferenceController(
+                 context, MY_USER_ID, lockPatternUtils));
+-        controllers.add(new ScreenOffFodPreferenceController(context));
+         controllers.add(new OwnerInfoPreferenceController(context, parent));
+         return controllers;
+     }
+diff --git a/src/com/android/settings/security/screenlock/ScreenOffFodPreferenceController.java b/src/com/android/settings/security/screenlock/ScreenOffFodPreferenceController.java
+deleted file mode 100644
+index de0833b2ea..0000000000
+--- a/src/com/android/settings/security/screenlock/ScreenOffFodPreferenceController.java
++++ /dev/null
+@@ -1,52 +0,0 @@
+-/*
+- * Copyright (C) 2017 The Android Open Source Project
+- *
+- * Licensed under the Apache License, Version 2.0 (the "License");
+- * you may not use this file except in compliance with the License.
+- * You may obtain a copy of the License at
+- *
+- *      http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-
+-package com.android.settings.security.screenlock;
+-
+-import android.content.Context;
+-import android.content.pm.PackageManager;
+-import android.hardware.fingerprint.FingerprintManager;
+-
+-import com.android.internal.util.crdroid.FodUtils;
+-import com.android.settings.R;
+-import com.android.settings.Utils;
+-import com.android.settings.core.BasePreferenceController;
+-
+-public class ScreenOffFodPreferenceController extends BasePreferenceController {
+-    private static final String KEY_FOD_GESTURE = "fod_gesture";
+-    private Context mContext;
+-
+-    private FingerprintManager fpm;
+-    private PackageManager packageManager;
+-
+-    public ScreenOffFodPreferenceController(Context context) {
+-        super(context, KEY_FOD_GESTURE);
+-        mContext = context;
+-
+-        fpm = Utils.getFingerprintManagerOrNull(context);
+-        packageManager = context.getPackageManager();
+-    }
+-
+-    @Override
+-    public int getAvailabilityStatus() {
+-        if (fpm != null && fpm.isHardwareDetected() && fpm.hasEnrolledFingerprints()
+-                && FodUtils.hasFodSupport(mContext)
+-                && mContext.getResources().getBoolean(R.bool.config_supportScreenOffFod)) {
+-            return AVAILABLE;
+-        }
+-        return UNSUPPORTED_ON_DEVICE;
+-    }
+-}
+-- 
+2.30.2
+

@@ -1,0 +1,260 @@
+From 28aac164004f1dfb1e6684280b4e5250613c9bbd Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 19:29:26 +0000
+Subject: [PATCH 36/52] Revert "FODCircleView: Recognizing fingerprint
+ animation [1/2]"
+
+This reverts commit 44a4082b39d20b0b7db7f3cb55511aa28fefa032.
+---
+ core/java/android/provider/Settings.java      |  6 --
+ .../fod_pulse_recognizing_white_anim.xml      | 43 ---------
+ packages/SystemUI/res/values/cr_dimens.xml    |  3 -
+ .../systemui/biometrics/FODCircleView.java    | 90 +------------------
+ 4 files changed, 4 insertions(+), 138 deletions(-)
+ delete mode 100644 packages/SystemUI/res/drawable/fod_pulse_recognizing_white_anim.xml
+
+diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
+index 9c06d3085d4..b59a9661866 100755
+--- a/core/java/android/provider/Settings.java
++++ b/core/java/android/provider/Settings.java
+@@ -5391,12 +5391,6 @@ public final class Settings {
+          */
+         public static final String THREE_FINGER_GESTURE = "three_finger_gesture";
+ 
+-        /**
+-         * FOD recognizing animation
+-         * @hide
+-         */
+-        public static final String FOD_RECOGNIZING_ANIMATION = "fod_recognizing_animation";
+-
+         /**
+          * Whether allowing pocket service to register sensors and dispatch informations.
+          *   0 = disabled
+diff --git a/packages/SystemUI/res/drawable/fod_pulse_recognizing_white_anim.xml b/packages/SystemUI/res/drawable/fod_pulse_recognizing_white_anim.xml
+deleted file mode 100644
+index ea98ebcd6f7..00000000000
+--- a/packages/SystemUI/res/drawable/fod_pulse_recognizing_white_anim.xml
++++ /dev/null
+@@ -1,43 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<!-- Copyright (C) 2019 Extended-UI
+-
+-     Licensed under the Apache License, Version 2.0 (the "License");
+-     you may not use this file except in compliance with the License.
+-     You may obtain a copy of the License at
+-
+-          http://www.apache.org/licenses/LICENSE-2.0
+-
+-     Unless required by applicable law or agreed to in writing, software
+-     distributed under the License is distributed on an "AS IS" BASIS,
+-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+-     See the License for the specific language governing permissions and
+-     limitations under the License.
+--->
+-<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:oneshot="false">
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_1" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_2" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_3" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_4" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_5" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_6" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_7" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_8" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_9" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_10" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_11" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_12" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_13" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_14" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_15" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_16" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_17" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_18" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_19" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_20" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_21" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_22" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_23" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_24" android:duration="12" />
+-    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_25" android:duration="12" />
+-</animation-list>
+diff --git a/packages/SystemUI/res/values/cr_dimens.xml b/packages/SystemUI/res/values/cr_dimens.xml
+index dc54731ba56..4faec8d56f5 100644
+--- a/packages/SystemUI/res/values/cr_dimens.xml
++++ b/packages/SystemUI/res/values/cr_dimens.xml
+@@ -57,9 +57,6 @@
+     <dimen name="status_bar_mobile_type_padding">2dp</dimen>
+     <dimen name="status_bar_mobile_type_padding_limit">10dp</dimen>
+ 
+-    <!-- Recognizing fingerprint animation -->
+-    <dimen name="fod_animation_size">280dp</dimen>
+-
+     <!-- Tri-state UI -->
+     <dimen name="tri_state_down_dialog_position">850.0px</dimen>
+     <dimen name="tri_state_down_dialog_position_l">650.0px</dimen>
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index 8d133e83f53..10b304bb843 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -23,7 +23,6 @@ import android.content.res.Resources;
+ import android.graphics.Canvas;
+ import android.graphics.Color;
+ import android.graphics.Paint;
+-import android.graphics.drawable.AnimationDrawable;
+ import android.graphics.PixelFormat;
+ import android.graphics.Point;
+ import android.hardware.biometrics.BiometricSourceType;
+@@ -34,7 +33,6 @@ import android.provider.Settings;
+ import android.util.DisplayMetrics;
+ import android.view.Display;
+ import android.view.Gravity;
+-import android.view.LayoutInflater;
+ import android.view.MotionEvent;
+ import android.view.Surface;
+ import android.view.View;
+@@ -91,9 +89,6 @@ public class FODCircleView extends ImageView {
+ 
+     private Timer mBurnInProtectionTimer;
+ 
+-    private FODAnimation mFODAnimation;
+-    private boolean mIsRecognizingAnimEnabled;
+-
+     private IFingerprintInscreenCallback mFingerprintInscreenCallback =
+             new IFingerprintInscreenCallback.Stub() {
+         @Override
+@@ -151,8 +146,10 @@ public class FODCircleView extends ImageView {
+         @Override
+         public void onKeyguardVisibilityChanged(boolean showing) {
+             mIsKeyguard = showing;
+-            if (mFODAnimation != null) {
+-                mFODAnimation.setAnimationKeyguard(mIsKeyguard);
++            if (!showing) {
++                hide();
++            } else {
++                updateAlpha();
+             }
+         }
+ 
+@@ -168,9 +165,6 @@ public class FODCircleView extends ImageView {
+             } else {
+                 hide();
+             }
+-            if (mFODAnimation != null) {
+-                mFODAnimation.setAnimationKeyguard(mIsBouncer);
+-            }
+         }
+ 
+         @Override
+@@ -266,8 +260,6 @@ public class FODCircleView extends ImageView {
+ 
+         mUpdateMonitor = Dependency.get(KeyguardUpdateMonitor.class);
+         mUpdateMonitor.registerCallback(mMonitorCallback);
+-
+-        mFODAnimation = new FODAnimation(context, mPositionX, mPositionY);
+     }
+ 
+     @Override
+@@ -293,19 +285,14 @@ public class FODCircleView extends ImageView {
+ 
+         if (event.getAction() == MotionEvent.ACTION_DOWN && newIsInside) {
+             showCircle();
+-            if (mIsRecognizingAnimEnabled) {
+-                mFODAnimation.showFODanimation();
+-            }
+             return true;
+         } else if (event.getAction() == MotionEvent.ACTION_UP) {
+             hideCircle();
+-            mFODAnimation.hideFODanimation();
+             return true;
+         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+             return true;
+         }
+ 
+-        mFODAnimation.hideFODanimation();
+         return false;
+     }
+ 
+@@ -486,7 +473,6 @@ public class FODCircleView extends ImageView {
+         if (mIsDreaming) {
+             mParams.x += mDreamingOffsetX;
+             mParams.y += mDreamingOffsetY;
+-            mFODAnimation.updateParams(mParams.y);
+         }
+ 
+         mWindowManager.updateViewLayout(this, mParams);
+@@ -567,71 +553,3 @@ public class FODCircleView extends ImageView {
+         }
+     };
+ }
+-
+-class FODAnimation extends ImageView {
+-
+-    private Context mContext;
+-    private int mAnimationPositionY;
+-    private LayoutInflater mInflater;
+-    private WindowManager mWindowManager;
+-    private boolean mShowing = false;
+-    private boolean mIsKeyguard;
+-    private final AnimationDrawable recognizingAnim;
+-    private final WindowManager.LayoutParams mAnimParams = new WindowManager.LayoutParams();
+-
+-    public FODAnimation(Context context, int mPositionX, int mPositionY) {
+-        super(context);
+-
+-        mContext = context;
+-        mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+-        mWindowManager = mContext.getSystemService(WindowManager.class);
+-
+-        mAnimParams.height = mContext.getResources().getDimensionPixelSize(R.dimen.fod_animation_size);
+-        mAnimParams.width = mContext.getResources().getDimensionPixelSize(R.dimen.fod_animation_size);
+-
+-        mAnimationPositionY = (int) Math.round(mPositionY - (mContext.getResources().getDimensionPixelSize(R.dimen.fod_animation_size) / 2));
+-
+-        mAnimParams.format = PixelFormat.TRANSLUCENT;
+-        mAnimParams.type = WindowManager.LayoutParams.TYPE_VOLUME_OVERLAY; // it must be behind FOD icon
+-        mAnimParams.flags =  WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+-                | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS;
+-        mAnimParams.gravity = Gravity.TOP | Gravity.CENTER;
+-        mAnimParams.y = mAnimationPositionY;
+-
+-        this.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+-        this.setBackgroundResource(R.drawable.fod_pulse_recognizing_white_anim);
+-        recognizingAnim = (AnimationDrawable) this.getBackground();
+-
+-    }
+-
+-    public void updateParams(int mDreamingOffsetY) {
+-        mAnimationPositionY = (int) Math.round(mDreamingOffsetY - (mContext.getResources().getDimensionPixelSize(R.dimen.fod_animation_size) / 2));
+-        mAnimParams.y = mAnimationPositionY;
+-    }
+-
+-    public void setAnimationKeyguard(boolean state) {
+-        mIsKeyguard = state;
+-    }
+-
+-    public void showFODanimation() {
+-        if (mAnimParams != null && !mShowing && mIsKeyguard) {
+-            mShowing = true;
+-            mWindowManager.addView(this, mAnimParams);
+-            recognizingAnim.start();
+-        }
+-    }
+-
+-    public void hideFODanimation() {
+-        if (mShowing) {
+-            mShowing = false;
+-            if (recognizingAnim != null) {
+-                this.clearAnimation();
+-                recognizingAnim.stop();
+-                recognizingAnim.selectDrawable(0);
+-            }
+-            if (this.getWindowToken() != null) {
+-                mWindowManager.removeView(this);
+-            }
+-        }
+-    }
+-}
+-- 
+2.30.2
+

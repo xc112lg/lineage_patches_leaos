@@ -1,0 +1,24 @@
+From 99037b5fb22e2548c888f406f37907546f11f48d Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Mon, 20 Sep 2021 09:50:58 +0000
+Subject: [PATCH] disable debugging also for O3 level
+
+---
+ files/Android.bp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/files/Android.bp b/files/Android.bp
+index 2142be2..039fff4 100644
+--- a/files/Android.bp
++++ b/files/Android.bp
+@@ -85,6 +85,7 @@ cc_library {
+         "-fexceptions",
+         "-DHAVE_JPEG",
+         "-O3",
++        "-g0",
+     ],
+ 
+     arch: {
+-- 
+2.30.2
+

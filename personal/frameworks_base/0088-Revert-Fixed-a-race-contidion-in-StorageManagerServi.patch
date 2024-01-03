@@ -1,0 +1,34 @@
+From 1f028b87e2ae6b42154d52d9b4b3cde7a72718b1 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Mon, 20 Sep 2021 10:50:08 +0000
+Subject: [PATCH 088/115] Revert "Fixed a race contidion in
+ StorageManagerService"
+
+This reverts commit 52d0df54291db5e0dfd67ec133e70a6322eb1920.
+---
+ .../core/java/com/android/server/StorageManagerService.java  | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/services/core/java/com/android/server/StorageManagerService.java b/services/core/java/com/android/server/StorageManagerService.java
+index bdce8f3846f..84631fc1b49 100644
+--- a/services/core/java/com/android/server/StorageManagerService.java
++++ b/services/core/java/com/android/server/StorageManagerService.java
+@@ -1400,13 +1400,12 @@ class StorageManagerService extends IStorageManager.Stub
+                     final int oldState = vol.state;
+                     final int newState = state;
+                     vol.state = newState;
+-                    final VolumeInfo vInfo = vol.clone();
+                     final SomeArgs args = SomeArgs.obtain();
+-                    args.arg1 = vInfo;
++                    args.arg1 = vol;
+                     args.arg2 = oldState;
+                     args.arg3 = newState;
+                     mHandler.obtainMessage(H_VOLUME_STATE_CHANGED, args).sendToTarget();
+-                    onVolumeStateChangedLocked(vInfo, oldState, newState);
++                    onVolumeStateChangedLocked(vol, oldState, newState);
+                 }
+             }
+         }
+-- 
+2.25.1
+

@@ -1,0 +1,26 @@
+From 72fd0bf66b984dd8ca5a131d70c1c32da90a8fcc Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 28 Feb 2021 14:06:29 -0500
+Subject: [PATCH 81/81] disable blur by default
+
+---
+ system.prop | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/system.prop b/system.prop
+index 8b4032e..ce4664c 100644
+--- a/system.prop
++++ b/system.prop
+@@ -7,6 +7,9 @@ persist.sys.overlay.nightmode=true
+ #experimental
+ ro.odm.camera=1
+ 
++#Disable blur effect
++persist.sys.sf.disable_blurs=1
++
+ #Disable debugging strict mode toasts
+ persist.sys.strictmode.disable=true
+ persist.sys.phh.mainkeys=0
+-- 
+2.25.1
+

@@ -1,0 +1,29 @@
+From 651b47e7cdc638f4aa011fd7eca94988532d108b Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Wed, 30 Sep 2020 09:52:25 -0400
+Subject: [PATCH 4/4] moar generic
+
+---
+ config/common.mk | 6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/config/common.mk b/config/common.mk
+index 1db6b6c3..9735489c 100644
+--- a/config/common.mk
++++ b/config/common.mk
+@@ -105,12 +105,6 @@ PRODUCT_MINIMIZE_JAVA_DEBUG_INFO := true
+ # Disable vendor restrictions
+ PRODUCT_RESTRICT_VENDOR_FILES := false
+ 
+-# Bootanimation
+-TARGET_SCREEN_WIDTH ?= 1080
+-TARGET_SCREEN_HEIGHT ?= 1920
+-PRODUCT_PACKAGES += \
+-    bootanimation.zip
+-
+ # Lineage packages
+ PRODUCT_PACKAGES += \
+     LineageParts \
+-- 
+2.25.1
+

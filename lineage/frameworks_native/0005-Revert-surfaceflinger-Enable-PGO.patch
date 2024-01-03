@@ -1,0 +1,28 @@
+From 590b812a5c27c93bca68ff4472e4f31d5f47c2cd Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Thu, 13 May 2021 07:27:42 -0400
+Subject: [PATCH] Revert "surfaceflinger: Enable PGO"
+
+This reverts commit 397957b39242399fffbcb04314598e4aed931c65.
+---
+ services/surfaceflinger/Android.bp | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/services/surfaceflinger/Android.bp b/services/surfaceflinger/Android.bp
+index 3cf779363..560fbfc07 100644
+--- a/services/surfaceflinger/Android.bp
++++ b/services/surfaceflinger/Android.bp
+@@ -123,10 +123,6 @@ cc_defaults {
+     lto: {
+         thin: true,
+     },
+-    pgo: {
+-        sampling: true,
+-        profile_file: "surfaceflinger/surfaceflinger.profdata",
+-    },
+     // TODO(b/131771163): Fix broken fuzzer support with LTO.
+     sanitize: {
+         fuzzer: false,
+-- 
+2.17.1
+

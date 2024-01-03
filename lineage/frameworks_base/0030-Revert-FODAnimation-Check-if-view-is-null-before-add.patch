@@ -1,0 +1,31 @@
+From 5a5468b70c68ad0cc79c3a291598b89f53a4525f Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 19:27:26 +0000
+Subject: [PATCH 30/52] Revert "FODAnimation: Check if view is null before
+ adding a new one"
+
+This reverts commit 4b9d2d384d079f1f5b0dd8d5e196a3f3c36363f8.
+---
+ .../src/com/android/systemui/biometrics/FODAnimation.java   | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java
+index 4de5652806d..13eadf90e8c 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java
+@@ -108,10 +108,8 @@ public class FODAnimation extends ImageView {
+     public void showFODanimation() {
+         if (mAnimParams != null && !mShowing && mIsKeyguard) {
+             mShowing = true;
+-            if (this.getWindowToken() == null){
+-                mWindowManager.addView(this, mAnimParams);
+-                mWindowManager.updateViewLayout(this, mAnimParams);
+-            }
++            mWindowManager.addView(this, mAnimParams);
++            mWindowManager.updateViewLayout(this, mAnimParams);
+             recognizingAnim.start();
+         }
+     }
+-- 
+2.30.2
+

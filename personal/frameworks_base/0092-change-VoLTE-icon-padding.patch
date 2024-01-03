@@ -1,0 +1,27 @@
+From 4b1600f52572c63ef07550bcad3b0eecf9180570 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Mon, 20 Sep 2021 11:18:11 +0000
+Subject: [PATCH 092/115] change VoLTE icon padding
+
+---
+ .../SystemUI/res/layout/status_bar_mobile_signal_group.xml    | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/packages/SystemUI/res/layout/status_bar_mobile_signal_group.xml b/packages/SystemUI/res/layout/status_bar_mobile_signal_group.xml
+index 8e74ffe843e..03f000d4ebe 100644
+--- a/packages/SystemUI/res/layout/status_bar_mobile_signal_group.xml
++++ b/packages/SystemUI/res/layout/status_bar_mobile_signal_group.xml
+@@ -35,8 +35,8 @@
+             android:layout_height="wrap_content"
+             android:layout_width="wrap_content"
+             android:visibility="gone"
+-            android:paddingStart="3dp"
+-            android:paddingEnd="1dp"/>
++            android:paddingStart="@dimen/status_bar_horizontal_padding"
++            android:paddingEnd="@dimen/status_bar_horizontal_padding"/>
+         <FrameLayout
+             android:id="@+id/inout_container"
+             android:layout_height="17dp"
+-- 
+2.25.1
+

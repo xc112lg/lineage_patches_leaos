@@ -1,0 +1,28 @@
+From 78c1a94acfa7a468754afee45071bad3680b0255 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Wed, 26 Feb 2020 07:23:44 +0200
+Subject: [PATCH 12/14] fix offline charger v9
+
+	modified:   rootdir/init.rc
+---
+ rootdir/init.rc | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/rootdir/init.rc b/rootdir/init.rc
+index 39f25d8a5..7cdc808cb 100644
+--- a/rootdir/init.rc
++++ b/rootdir/init.rc
+@@ -942,6 +942,10 @@ on nonencrypted
+ on property:sys.init_log_level=*
+     loglevel ${sys.init_log_level}
+ 
++on charger && property:ro.hardware=mt*
++    write /sys/class/leds/lcd-backlight/trigger "backlight"
++    write /sys/class/android_usb/android0/enable 1
++
+ on charger
+     class_start charger
+ 
+-- 
+2.25.1
+

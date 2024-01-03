@@ -1,0 +1,26 @@
+From a22c62dce87c0b591934fac2a4b521f25a325482 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Wed, 19 May 2021 15:38:03 -0400
+Subject: [PATCH 086/115] Revert "QS: Use Mobile Data panel for CellularTile"
+
+This reverts commit 7e54280d196745b619a4a5a9b98b720f3ef2cc34.
+---
+ .../src/com/android/systemui/qs/tiles/CellularTile.java         | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/qs/tiles/CellularTile.java b/packages/SystemUI/src/com/android/systemui/qs/tiles/CellularTile.java
+index 47ebaa79fb2..33f6650996c 100644
+--- a/packages/SystemUI/src/com/android/systemui/qs/tiles/CellularTile.java
++++ b/packages/SystemUI/src/com/android/systemui/qs/tiles/CellularTile.java
+@@ -108,7 +108,7 @@ public class CellularTile extends QSTileImpl<SignalState> {
+         if (getState().state == Tile.STATE_UNAVAILABLE) {
+             return new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+         }
+-        return new Intent(Settings.Panel.ACTION_MOBILE_DATA);
++        return getCellularSettingIntent();
+     }
+ 
+     private void handleClickInner() {
+-- 
+2.25.1
+

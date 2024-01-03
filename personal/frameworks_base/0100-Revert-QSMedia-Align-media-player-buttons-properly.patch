@@ -1,0 +1,25 @@
+From 94e027bfc2b97b6218a2e9e5aac4ded20d8f33f8 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Mon, 31 Jan 2022 18:04:17 +0000
+Subject: [PATCH 100/115] Revert "QSMedia: Align media player buttons properly"
+
+This reverts commit 8e0552f4e12c33404f0f79b39a59a9b0f242d893.
+---
+ packages/SystemUI/res/xml/media_expanded.xml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/packages/SystemUI/res/xml/media_expanded.xml b/packages/SystemUI/res/xml/media_expanded.xml
+index 215cb77d949..99d423e80c0 100644
+--- a/packages/SystemUI/res/xml/media_expanded.xml
++++ b/packages/SystemUI/res/xml/media_expanded.xml
+@@ -124,6 +124,7 @@
+         android:id="@+id/action0"
+         android:layout_width="48dp"
+         android:layout_height="48dp"
++        android:layout_marginTop="5dp"
+         android:layout_marginStart="@dimen/qs_media_panel_outer_padding"
+         android:layout_marginBottom="@dimen/qs_media_panel_outer_padding"
+         app:layout_constraintHorizontal_chainStyle="packed"
+-- 
+2.25.1
+

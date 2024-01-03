@@ -1,0 +1,29 @@
+From 73064205f368eb0281a40d245af5480574d1f9d5 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Mon, 20 Sep 2021 12:24:18 +0000
+Subject: [PATCH] fix GSI gapps compatibility issue
+
+  FAILED:
+  build/make/core/Makefile:46: error: overriding commands for target
+  `out/target/product/phhgsi_arm64_ab/system/product/etc/
+  sysconfig/google.xml', previously defined at
+  build/make/core/base_rules.mk:519
+---
+ config.mk | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/config.mk b/config.mk
+index 6053d87..b423c56 100644
+--- a/config.mk
++++ b/config.mk
+@@ -29,7 +29,6 @@ endif
+ 
+ PRODUCT_COPY_FILES += \
+     vendor/addons/prebuilt/product/etc/sysconfig/dialer_experience.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/sysconfig/dialer_experience.xml \
+-    vendor/addons/prebuilt/product/etc/sysconfig/google.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/sysconfig/google.xml \
+     vendor/addons/prebuilt/product/etc/sysconfig/google_build.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/sysconfig/google_build.xml \
+     vendor/addons/prebuilt/product/etc/sysconfig/google_exclusives_enable.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/sysconfig/google_exclusives_enable.xml \
+     vendor/addons/prebuilt/product/etc/sysconfig/google-hiddenapi-package-whitelist.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/sysconfig/google-hiddenapi-package-whitelist.xml \
+-- 
+2.30.2
+

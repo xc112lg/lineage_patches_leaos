@@ -1,0 +1,25 @@
+From eac49181e2488ed126d3ec15f27a47f42df5bf82 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Wed, 24 Mar 2021 16:20:51 -0400
+Subject: [PATCH 7/8] fix wrong 'RU' translation
+
+---
+ java/com/android/dialer/main/impl/res/values-ru/strings.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/java/com/android/dialer/main/impl/res/values-ru/strings.xml b/java/com/android/dialer/main/impl/res/values-ru/strings.xml
+index 4a60cfca5..a0c411169 100644
+--- a/java/com/android/dialer/main/impl/res/values-ru/strings.xml
++++ b/java/com/android/dialer/main/impl/res/values-ru/strings.xml
+@@ -17,7 +17,7 @@
+ 
+ <resources xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+-    <string name="main_activity_label" msgid="3121599977875141886">"Позвонить"</string>
++    <string name="main_activity_label" msgid="3121599977875141886">"Телефон"</string>
+     <string name="nui_shortcut_name" msgid="6370942901789984087">"Позвонить в новом интерфейсе"</string>
+     <string name="main_call_history_tab_description" msgid="1705569872650796265">"Журнал звонков"</string>
+     <string name="search" msgid="3570654445331155513">"@android:string/search_go"</string>
+-- 
+2.30.2
+

@@ -1,0 +1,192 @@
+From 1159121ba5f44b8e2ffa1616033edec4dce54755 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 19:30:24 +0000
+Subject: [PATCH 37/52] Revert "Use FodUtils for FOD config checking"
+
+This reverts commit 688723fb4a9970060e9e66ec2e622a24b0fa7bb0.
+---
+ .../internal/util/crdroid/FodUtils.java       | 25 -------------------
+ .../android/internal/util/crdroid/Utils.java  | 16 ------------
+ core/res/res/values/cr_config.xml             |  3 ---
+ core/res/res/values/cr_symbols.xml            |  3 ---
+ .../biometrics/FODCircleViewImpl.java         |  4 +--
+ .../keyguard/KeyguardViewMediator.java        |  7 +-----
+ .../fingerprint/FingerprintService.java       |  7 +-----
+ 7 files changed, 3 insertions(+), 62 deletions(-)
+ delete mode 100644 core/java/com/android/internal/util/crdroid/FodUtils.java
+
+diff --git a/core/java/com/android/internal/util/crdroid/FodUtils.java b/core/java/com/android/internal/util/crdroid/FodUtils.java
+deleted file mode 100644
+index 78ce8ab08b8..00000000000
+--- a/core/java/com/android/internal/util/crdroid/FodUtils.java
++++ /dev/null
+@@ -1,25 +0,0 @@
+-/*
+- * Copyright (C) 2019-2021 crDroid Android Project
+- *
+- * Licensed under the Apache License, Version 2.0 (the "License");
+- * you may not use this file except in compliance with the License.
+- * You may obtain a copy of the License at
+- *
+- * http://www.apache.org/licenses/LICENSE-2.0
+- *
+- * Unless required by applicable law or agreed to in writing, software
+- * distributed under the License is distributed on an "AS IS" BASIS,
+- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+- * See the License for the specific language governing permissions and
+- * limitations under the License.
+- */
+-
+-package com.android.internal.util.crdroid;
+-
+-import android.content.Context;
+-
+-public class FodUtils {
+-    public static boolean hasFodSupport(Context context) {
+-        return context.getResources().getBoolean(com.android.internal.R.bool.config_needCustomFODView);
+-    }
+-}
+diff --git a/core/java/com/android/internal/util/crdroid/Utils.java b/core/java/com/android/internal/util/crdroid/Utils.java
+index 3287478b510..c63dd4066b6 100644
+--- a/core/java/com/android/internal/util/crdroid/Utils.java
++++ b/core/java/com/android/internal/util/crdroid/Utils.java
+@@ -16,7 +16,6 @@
+ 
+ package com.android.internal.util.crdroid;
+ 
+-import android.Manifest;
+ import android.app.ActivityManager;
+ import android.app.NotificationManager;
+ import android.content.Context;
+@@ -31,7 +30,6 @@ import android.hardware.SensorManager;
+ import android.hardware.camera2.CameraAccessException;
+ import android.hardware.camera2.CameraCharacteristics;
+ import android.hardware.camera2.CameraManager;
+-import android.hardware.fingerprint.FingerprintManager;
+ import android.hardware.input.InputManager;
+ import android.media.AudioManager;
+ import android.net.ConnectivityManager;
+@@ -78,20 +76,6 @@ public class Utils {
+         return (cm.isNetworkSupported(ConnectivityManager.TYPE_MOBILE) == false);
+     }
+ 
+-    // Check to see if device supports the Fingerprint scanner
+-    public static boolean hasFingerprintSupport(Context context) {
+-        FingerprintManager fingerprintManager = (FingerprintManager) context.getSystemService(Context.FINGERPRINT_SERVICE);
+-        return context.getApplicationContext().checkSelfPermission(Manifest.permission.USE_FINGERPRINT) == PackageManager.PERMISSION_GRANTED &&
+-                (fingerprintManager != null && fingerprintManager.isHardwareDetected());
+-    }
+-
+-    // Check to see if device not only supports the Fingerprint scanner but also if is enrolled
+-    public static boolean hasFingerprintEnrolled(Context context) {
+-        FingerprintManager fingerprintManager = (FingerprintManager) context.getSystemService(Context.FINGERPRINT_SERVICE);
+-        return context.getApplicationContext().checkSelfPermission(Manifest.permission.USE_FINGERPRINT) == PackageManager.PERMISSION_GRANTED &&
+-                (fingerprintManager != null && fingerprintManager.isHardwareDetected() && fingerprintManager.hasEnrolledFingerprints());
+-    }
+-
+    /**
+      * Checks if a specific package is installed.
+      *
+diff --git a/core/res/res/values/cr_config.xml b/core/res/res/values/cr_config.xml
+index 410f2690e82..677c28dbfaf 100644
+--- a/core/res/res/values/cr_config.xml
++++ b/core/res/res/values/cr_config.xml
+@@ -65,9 +65,6 @@
+     <!-- Whether doze feature is enabled by default in settings -->
+     <bool name="config_doze_enabled_by_default">false</bool>
+ 
+-    <!-- Whether to show a custom view for FOD -->
+-    <bool name="config_needCustomFODView">false</bool>
+-
+     <!-- Whether device has physical tri state switch -->
+     <bool name="config_hasAlertSlider">false</bool>
+ 
+diff --git a/core/res/res/values/cr_symbols.xml b/core/res/res/values/cr_symbols.xml
+index 964c5bd35fd..7f31c3a015b 100644
+--- a/core/res/res/values/cr_symbols.xml
++++ b/core/res/res/values/cr_symbols.xml
+@@ -74,9 +74,6 @@
+   <!-- Whether doze feature is enabled by default in settings -->
+   <java-symbol type="bool" name="config_doze_enabled_by_default" />
+ 
+-  <!-- Whether to show a custom view for FOD -->
+-  <java-symbol type="bool" name="config_needCustomFODView" />
+-
+   <!-- App error dialog -->
+   <java-symbol type="id" name="aerr_copy" />
+   <java-symbol type="string" name="url_copy_success" />
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleViewImpl.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleViewImpl.java
+index c5fb4ccee44..8f8f255d370 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleViewImpl.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleViewImpl.java
+@@ -21,8 +21,6 @@ import android.content.pm.PackageManager;
+ import android.util.Slog;
+ import android.view.View;
+ 
+-import com.android.internal.util.crdroid.FodUtils;
+-
+ import com.android.systemui.SystemUI;
+ import com.android.systemui.biometrics.FODCircleViewImplCallback;
+ import com.android.systemui.statusbar.CommandQueue;
+@@ -57,7 +55,7 @@ public class FODCircleViewImpl extends SystemUI implements CommandQueue.Callback
+     public void start() {
+         PackageManager packageManager = mContext.getPackageManager();
+         if (!packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT) ||
+-                !(packageManager.hasSystemFeature(LineageContextConstants.Features.FOD) || FodUtils.hasFodSupport(mContext))) {
++                !packageManager.hasSystemFeature(LineageContextConstants.Features.FOD)) {
+             return;
+         }
+         mCommandQueue.addCallback(this);
+diff --git a/packages/SystemUI/src/com/android/systemui/keyguard/KeyguardViewMediator.java b/packages/SystemUI/src/com/android/systemui/keyguard/KeyguardViewMediator.java
+index 85f4f435c20..3eb5de9289e 100644
+--- a/packages/SystemUI/src/com/android/systemui/keyguard/KeyguardViewMediator.java
++++ b/packages/SystemUI/src/com/android/systemui/keyguard/KeyguardViewMediator.java
+@@ -76,7 +76,6 @@ import com.android.internal.policy.IKeyguardDrawnCallback;
+ import com.android.internal.policy.IKeyguardExitCallback;
+ import com.android.internal.policy.IKeyguardStateCallback;
+ import com.android.internal.util.LatencyTracker;
+-import com.android.internal.util.crdroid.FodUtils;
+ import com.android.internal.widget.LockPatternUtils;
+ import com.android.keyguard.KeyguardConstants;
+ import com.android.keyguard.KeyguardDisplayManager;
+@@ -759,11 +758,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
+                     mInGestureNavigationMode = QuickStepContract.isGesturalMode(mode);
+                 }));
+         PackageManager packageManager = context.getPackageManager();
+-        if (packageManager.hasSystemFeature(LineageContextConstants.Features.FOD) || FodUtils.hasFodSupport(context)){
+-            mHasFod = true;
+-        }else{
+-            mHasFod = false;
+-        }
++        mHasFod = packageManager.hasSystemFeature(LineageContextConstants.Features.FOD);
+     }
+ 
+     public void userActivity() {
+diff --git a/services/core/java/com/android/server/biometrics/fingerprint/FingerprintService.java b/services/core/java/com/android/server/biometrics/fingerprint/FingerprintService.java
+index c0ce72e1438..5b51aa6e72a 100644
+--- a/services/core/java/com/android/server/biometrics/fingerprint/FingerprintService.java
++++ b/services/core/java/com/android/server/biometrics/fingerprint/FingerprintService.java
+@@ -66,7 +66,6 @@ import com.android.internal.annotations.GuardedBy;
+ import com.android.internal.logging.MetricsLogger;
+ import com.android.internal.util.DumpUtils;
+ import com.android.internal.widget.LockPatternUtils;
+-import com.android.internal.util.crdroid.FodUtils;
+ import com.android.server.SystemServerInitThreadPool;
+ import com.android.server.biometrics.AuthenticationClient;
+ import com.android.server.biometrics.BiometricServiceBase;
+@@ -896,11 +895,7 @@ public class FingerprintService extends BiometricServiceBase {
+         mLockPatternUtils = new LockPatternUtils(context);
+ 
+         PackageManager packageManager = context.getPackageManager();
+-        if (packageManager.hasSystemFeature(LineageContextConstants.Features.FOD) || FodUtils.hasFodSupport(context)){
+-            mHasFod = true;
+-        }else{
+-            mHasFod = false;
+-        }
++        mHasFod = packageManager.hasSystemFeature(LineageContextConstants.Features.FOD);
+     }
+ 
+     @Override
+-- 
+2.30.2
+

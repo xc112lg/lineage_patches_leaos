@@ -1,0 +1,48 @@
+From 6bf20418c5662f3e17889fb0213602e83bf7d302 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 19:27:19 +0000
+Subject: [PATCH 26/52] Revert "FODCircleView: changes to FOD circle and
+ animation visibility"
+
+This reverts commit bc93fd360cd6e0c5330629eccd464c725fd8abd6.
+---
+ .../src/com/android/systemui/biometrics/FODCircleView.java  | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index fe43dc76bc4..1f69a44be6a 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -381,9 +381,11 @@ public class FODCircleView extends ImageView implements TunerService.Tunable {
+ 
+         if (event.getAction() == MotionEvent.ACTION_DOWN && newIsInside) {
+             showCircle();
++            mHandler.post(() -> mFODAnimation.showFODanimation());
+             return true;
+         } else if (event.getAction() == MotionEvent.ACTION_UP) {
+             hideCircle();
++            mHandler.post(() -> mFODAnimation.hideFODanimation());
+             return true;
+         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+             return true;
+@@ -462,8 +464,6 @@ public class FODCircleView extends ImageView implements TunerService.Tunable {
+         setDim(true);
+         dispatchPress();
+ 
+-        mHandler.post(() -> mFODAnimation.showFODanimation());
+-
+         setImageDrawable(null);
+         invalidate();
+     }
+@@ -477,8 +477,6 @@ public class FODCircleView extends ImageView implements TunerService.Tunable {
+         dispatchRelease();
+         setDim(false);
+ 
+-        mHandler.post(() -> mFODAnimation.hideFODanimation());
+-
+         setKeepScreenOn(false);
+     }
+ 
+-- 
+2.30.2
+

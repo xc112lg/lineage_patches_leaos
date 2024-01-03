@@ -1,0 +1,58 @@
+From b255dcf54c3bc6a62770d41e01a33170d2b8a629 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 18:57:32 +0000
+Subject: [PATCH 14/52] Revert "Remove FOD night light if not enabled by
+ default [1/2]"
+
+This reverts commit 8ba06a70b54fa0f06fd81668fc5b436fb56e22f9.
+---
+ .../systemui/biometrics/FODCircleViewImpl.java | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleViewImpl.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleViewImpl.java
+index 2c923571905..c3dd5c3e266 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleViewImpl.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleViewImpl.java
+@@ -94,7 +94,7 @@ public class FODCircleViewImpl extends SystemUI implements CommandQueue.Callback
+                 }
+             }
+             mIsFODVisible = true;
+-            if (mDisableNightMode && isNightLightEnabled()) {
++            if (isNightLightEnabled()) {
+                 disableNightMode();
+             }
+             mFodCircleView.show();
+@@ -103,22 +103,22 @@ public class FODCircleViewImpl extends SystemUI implements CommandQueue.Callback
+ 
+     private boolean isNightLightEnabled() {
+        return Settings.System.getInt(mContext.getContentResolver(),
+-                Settings.System.FOD_NIGHT_LIGHT, 1) == 1;
++                Settings.System.FOD_NIGHT_LIGHT, mDisableNightMode ? 1 : 0) == 1;
+     }
+     
+     @Override
+     public void hideInDisplayFingerprintView() {
+         if (mFodCircleView != null) {
+-            if (!mDisableNightMode) {
+-                for (int i = 0; i < mCallbacks.size(); i++) {
+-                    FODCircleViewImplCallback cb = mCallbacks.get(i).get();
+-                    if (cb != null) {
+-                        cb.onFODStatusChange(false);
+-                    }
++             if (isNightLightEnabled()) {
++            for (int i = 0; i < mCallbacks.size(); i++) {
++                FODCircleViewImplCallback cb = mCallbacks.get(i).get();
++                if (cb != null) {
++                    cb.onFODStatusChange(false);
+                 }
+             }
++        }
+             mIsFODVisible = false;
+-            if (mDisableNightMode && isNightLightEnabled()) {
++            if (isNightLightEnabled()) {
+                 setNightMode(mNightModeActive, mAutoModeState);
+             }
+             mFodCircleView.hide();
+-- 
+2.30.2
+

@@ -1,0 +1,28 @@
+From 7948cc7634effe814c9032b25bab4a8b4f39f6ad Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 18:57:38 +0000
+Subject: [PATCH 18/52] Revert "SystemUI: add more FOD animations [1/3]"
+
+This reverts commit e295378ba068d7ee1faaa12b43a94ef73e6af1f1.
+---
+ .../src/com/android/systemui/biometrics/FODAnimation.java     | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java
+index 08ce10010a2..642f73785b9 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java
+@@ -69,10 +69,6 @@ public class FODAnimation extends ImageView {
+         "fod_rog_fusion_recognizing_anim",
+         "fod_rog_pulsar_recognizing_anim",
+         "fod_rog_supernova_recognizing_anim",
+-        "fod_recog_animation_shine",
+-        "fod_recog_animation_smoke",
+-        "fod_recog_animation_strings",
+-        "fod_recog_animation_quantum",
+     };
+ 
+     private final String mFodAnimationPackage;
+-- 
+2.30.2
+

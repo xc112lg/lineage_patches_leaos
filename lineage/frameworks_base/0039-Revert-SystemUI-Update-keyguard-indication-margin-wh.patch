@@ -1,0 +1,166 @@
+From 11a5c793fbe96db886b0d1301e0beed8cfa0a5f9 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 19:33:59 +0000
+Subject: [PATCH 39/52] Revert "SystemUI: Update keyguard indication margin
+ when fod is in use"
+
+This reverts commit e9909a8fa5a19194a68c88c7cc4c923361781a60.
+---
+ .../res/layout/keyguard_bottom_area.xml       |  1 +
+ packages/SystemUI/res/values/cr_dimens.xml    |  3 --
+ .../phone/KeyguardBottomAreaView.java         | 50 ++++---------------
+ 3 files changed, 11 insertions(+), 43 deletions(-)
+
+diff --git a/packages/SystemUI/res/layout/keyguard_bottom_area.xml b/packages/SystemUI/res/layout/keyguard_bottom_area.xml
+index d1fc7b523e1..027f70c7de6 100644
+--- a/packages/SystemUI/res/layout/keyguard_bottom_area.xml
++++ b/packages/SystemUI/res/layout/keyguard_bottom_area.xml
+@@ -29,6 +29,7 @@
+         android:id="@+id/keyguard_indication_area"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
++        android:layout_marginBottom="@dimen/keyguard_indication_margin_bottom"
+         android:layout_gravity="bottom|center_horizontal"
+         android:orientation="vertical">
+ 
+diff --git a/packages/SystemUI/res/values/cr_dimens.xml b/packages/SystemUI/res/values/cr_dimens.xml
+index 4faec8d56f5..752a59fdbbf 100644
+--- a/packages/SystemUI/res/values/cr_dimens.xml
++++ b/packages/SystemUI/res/values/cr_dimens.xml
+@@ -38,9 +38,6 @@
+     <!-- Weather condition icon  -->
+     <dimen name="weather_icon_size">24dp</dimen>
+ 
+-    <!-- Bottom margin size when fingerprint in display is active -->
+-    <dimen name="keyguard_indication_margin_bottom_fingerprint_in_display">30dp</dimen>
+-
+     <!-- Binary clock -->
+     <dimen name="binary_clock_dot_size">8dp</dimen>
+     <dimen name="binary_clock_stroke_width">2dp</dimen>
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/phone/KeyguardBottomAreaView.java b/packages/SystemUI/src/com/android/systemui/statusbar/phone/KeyguardBottomAreaView.java
+index 86d9d03fb44..8727e3dceca 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/phone/KeyguardBottomAreaView.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/phone/KeyguardBottomAreaView.java
+@@ -40,7 +40,6 @@ import android.content.pm.PackageManager;
+ import android.content.pm.ResolveInfo;
+ import android.content.res.Configuration;
+ import android.graphics.drawable.Drawable;
+-import android.hardware.biometrics.BiometricSourceType;
+ import android.os.AsyncTask;
+ import android.os.Bundle;
+ import android.os.IBinder;
+@@ -86,7 +85,7 @@ import com.android.systemui.statusbar.policy.PreviewInflater;
+ import com.android.systemui.tuner.LockscreenFragment.LockButtonFactory;
+ import com.android.systemui.tuner.TunerService;
+ 
+-import lineageos.app.LineageContextConstants;
++import java.util.concurrent.Executor;
+ 
+ /**
+  * Implementation for the bottom area of the Keyguard, including camera/phone affordance and status
+@@ -144,7 +143,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
+ 
+     private boolean mUserSetupComplete;
+     private boolean mPrewarmBound;
+-    private boolean mIsFingerprintRunning;
+     private Messenger mPrewarmMessenger;
+     private final ServiceConnection mPrewarmConnection = new ServiceConnection() {
+ 
+@@ -170,7 +168,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
+     private String mLeftButtonStr;
+     private boolean mDozing;
+     private int mIndicationBottomMargin;
+-    private int mIndicationBottomMarginFod;
+     private float mDarkAmount;
+     private int mBurnInXOffset;
+     private int mBurnInYOffset;
+@@ -247,8 +244,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
+         mIndicationText = findViewById(R.id.keyguard_indication_text);
+         mIndicationBottomMargin = getResources().getDimensionPixelSize(
+                 R.dimen.keyguard_indication_margin_bottom);
+-        mIndicationBottomMarginFod = getResources().getDimensionPixelSize(
+-                R.dimen.keyguard_indication_margin_bottom_fingerprint_in_display);
+         mBurnInYOffset = getResources().getDimensionPixelSize(
+                 R.dimen.default_burn_in_prevention_offset);
+         updateCameraVisibility();
+@@ -265,7 +260,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
+         mAccessibilityController = Dependency.get(AccessibilityController.class);
+         mActivityIntentHelper = new ActivityIntentHelper(getContext());
+         updateLeftAffordance();
+-        updateIndicationAreaPadding();
+     }
+ 
+     @Override
+@@ -313,9 +307,15 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
+     @Override
+     protected void onConfigurationChanged(Configuration newConfig) {
+         super.onConfigurationChanged(newConfig);
+-
+-        // Update the bottom margin of the indication area
+-        updateIndicationAreaPadding();
++        mIndicationBottomMargin = getResources().getDimensionPixelSize(
++                R.dimen.keyguard_indication_margin_bottom);
++        mBurnInYOffset = getResources().getDimensionPixelSize(
++                R.dimen.default_burn_in_prevention_offset);
++        MarginLayoutParams mlp = (MarginLayoutParams) mIndicationArea.getLayoutParams();
++        if (mlp.bottomMargin != mIndicationBottomMargin) {
++            mlp.bottomMargin = mIndicationBottomMargin;
++            mIndicationArea.setLayoutParams(mlp);
++        }
+ 
+         // Respect font size setting.
+         mEnterpriseDisclosure.setTextSize(TypedValue.COMPLEX_UNIT_PX,
+@@ -385,23 +385,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
+                 && mRightButton.getIcon().isVisible ? View.VISIBLE : View.GONE);
+     }
+ 
+-    private void updateIndicationAreaPadding() {
+-        mIndicationBottomMargin = getResources().getDimensionPixelSize(
+-                R.dimen.keyguard_indication_margin_bottom);
+-        mIndicationBottomMarginFod = getResources().getDimensionPixelSize(
+-                R.dimen.keyguard_indication_margin_bottom_fingerprint_in_display);
+-        mBurnInYOffset = getResources().getDimensionPixelSize(
+-                R.dimen.default_burn_in_prevention_offset);
+-        MarginLayoutParams mlp = (MarginLayoutParams) mIndicationArea.getLayoutParams();
+-
+-        int bottomMargin = hasInDisplayFingerprint() ? mIndicationBottomMarginFod : mIndicationBottomMargin;
+-        boolean newLp = mlp.bottomMargin != bottomMargin;
+-        if (newLp) {
+-            mlp.bottomMargin = bottomMargin;
+-            mIndicationArea.setLayoutParams(mlp);
+-        }
+-    }
+-
+     /**
+      * Set an alternate icon for the left assist affordance (replace the mic icon)
+      */
+@@ -424,11 +407,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
+         mLeftAffordanceView.setContentDescription(state.contentDescription);
+     }
+ 
+-    private boolean hasInDisplayFingerprint() {
+-        return mContext.getPackageManager().hasSystemFeature(LineageContextConstants.Features.FOD)
+-                && mIsFingerprintRunning;
+-    }
+-
+     public boolean isLeftVoiceAssist() {
+         return mLeftIsVoiceAssist;
+     }
+@@ -738,14 +716,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
+                     updateCameraVisibility();
+                     updateLeftAffordance();
+                 }
+-                @Override
+-                public void onBiometricRunningStateChanged(boolean running,
+-                            BiometricSourceType biometricSourceType) {
+-                    if (biometricSourceType == BiometricSourceType.FINGERPRINT){
+-                        mIsFingerprintRunning = running;
+-                        updateIndicationAreaPadding();
+-                    }
+-                }
+             };
+ 
+     public void updateLeftAffordance() {
+-- 
+2.30.2
+

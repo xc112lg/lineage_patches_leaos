@@ -1,0 +1,160 @@
+From 321bddea0695eb51ea48ff6672adce64b8d77fdf Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Mon, 31 Jan 2022 17:51:56 +0000
+Subject: [PATCH 001/115] Revert "Tune roundeed corners for icon shapes"
+
+This reverts commit d5049ca2aa4f4a01229576de04259b14552f00c1.
+---
+ .../overlays/IconShapeHeartOverlay/res/values/config.xml  | 7 +++----
+ .../overlays/IconShapePebbleOverlay/res/values/config.xml | 7 +++----
+ .../IconShapeRoundedRectOverlay/res/values/config.xml     | 7 +++----
+ .../overlays/IconShapeSquareOverlay/res/values/config.xml | 7 +++----
+ .../IconShapeSquircleOverlay/res/values/config.xml        | 8 ++++----
+ .../IconShapeTaperedRectOverlay/res/values/config.xml     | 4 +---
+ .../IconShapeTeardropOverlay/res/values/config.xml        | 7 +++----
+ .../overlays/IconShapeVesselOverlay/res/values/config.xml | 7 +++----
+ 8 files changed, 23 insertions(+), 31 deletions(-)
+
+diff --git a/packages/overlays/IconShapeHeartOverlay/res/values/config.xml b/packages/overlays/IconShapeHeartOverlay/res/values/config.xml
+index ceff5429e3e..f9929f5f196 100644
+--- a/packages/overlays/IconShapeHeartOverlay/res/values/config.xml
++++ b/packages/overlays/IconShapeHeartOverlay/res/values/config.xml
+@@ -22,10 +22,9 @@
+     <!-- Flag indicating whether round icons should be parsed from the application manifest. -->
+     <bool name="config_useRoundIcon">false</bool>
+     <!-- Corner radius of system dialogs -->
+-    <dimen name="config_dialogCornerRadius">12dp</dimen>
++    <dimen name="config_dialogCornerRadius">8dp</dimen>
+     <!-- Corner radius for bottom sheet system dialogs -->
+-    <dimen name="config_bottomDialogCornerRadius">24dp</dimen>
+-    <!-- Corner radius of search bars and cards -->
+-    <dimen name="config_cardCornerRadius">12dp</dimen>
++    <dimen name="config_bottomDialogCornerRadius">16dp</dimen>
++
+ </resources>
+ 
+diff --git a/packages/overlays/IconShapePebbleOverlay/res/values/config.xml b/packages/overlays/IconShapePebbleOverlay/res/values/config.xml
+index f18f47aec98..e7eeb30501b 100644
+--- a/packages/overlays/IconShapePebbleOverlay/res/values/config.xml
++++ b/packages/overlays/IconShapePebbleOverlay/res/values/config.xml
+@@ -22,10 +22,9 @@
+     <!-- Flag indicating whether round icons should be parsed from the application manifest. -->
+     <bool name="config_useRoundIcon">false</bool>
+     <!-- Corner radius of system dialogs -->
+-    <dimen name="config_dialogCornerRadius">12dp</dimen>
++    <dimen name="config_dialogCornerRadius">8dp</dimen>
+     <!-- Corner radius for bottom sheet system dialogs -->
+-    <dimen name="config_bottomDialogCornerRadius">24dp</dimen>
+-    <!-- Corner radius of search bars and cards -->
+-    <dimen name="config_cardCornerRadius">24dp</dimen>
++    <dimen name="config_bottomDialogCornerRadius">16dp</dimen>
++
+ </resources>
+ 
+diff --git a/packages/overlays/IconShapeRoundedRectOverlay/res/values/config.xml b/packages/overlays/IconShapeRoundedRectOverlay/res/values/config.xml
+index a59f63d5bee..c5bb5e9bb88 100644
+--- a/packages/overlays/IconShapeRoundedRectOverlay/res/values/config.xml
++++ b/packages/overlays/IconShapeRoundedRectOverlay/res/values/config.xml
+@@ -22,10 +22,9 @@
+     <!-- Flag indicating whether round icons should be parsed from the application manifest. -->
+     <bool name="config_useRoundIcon">false</bool>
+     <!-- Corner radius of system dialogs -->
+-    <dimen name="config_dialogCornerRadius">4dp</dimen>
++    <dimen name="config_dialogCornerRadius">2dp</dimen>
+     <!-- Corner radius for bottom sheet system dialogs -->
+-    <dimen name="config_bottomDialogCornerRadius">8dp</dimen>
+-    <!-- Corner radius of search bars and cards -->
+-    <dimen name="config_cardCornerRadius">4dp</dimen>
++    <dimen name="config_bottomDialogCornerRadius">4dp</dimen>
++
+ </resources>
+ 
+diff --git a/packages/overlays/IconShapeSquareOverlay/res/values/config.xml b/packages/overlays/IconShapeSquareOverlay/res/values/config.xml
+index 84dfa7a1209..2016ece4d2c 100644
+--- a/packages/overlays/IconShapeSquareOverlay/res/values/config.xml
++++ b/packages/overlays/IconShapeSquareOverlay/res/values/config.xml
+@@ -22,10 +22,9 @@
+     <!-- Flag indicating whether round icons should be parsed from the application manifest. -->
+     <bool name="config_useRoundIcon">false</bool>
+     <!-- Corner radius of system dialogs -->
+-    <dimen name="config_dialogCornerRadius">2dp</dimen>
++    <dimen name="config_dialogCornerRadius">0dp</dimen>
+     <!-- Corner radius for bottom sheet system dialogs -->
+-    <dimen name="config_bottomDialogCornerRadius">4dp</dimen>
+-    <!-- Corner radius of search bars and cards -->
+-    <dimen name="config_cardCornerRadius">1dp</dimen>
++    <dimen name="config_bottomDialogCornerRadius">0dp</dimen>
++  
+ </resources>
+ 
+diff --git a/packages/overlays/IconShapeSquircleOverlay/res/values/config.xml b/packages/overlays/IconShapeSquircleOverlay/res/values/config.xml
+index 8f9ddb2c233..7692aa6b516 100644
+--- a/packages/overlays/IconShapeSquircleOverlay/res/values/config.xml
++++ b/packages/overlays/IconShapeSquircleOverlay/res/values/config.xml
+@@ -22,9 +22,9 @@
+     <!-- Flag indicating whether round icons should be parsed from the application manifest. -->
+     <bool name="config_useRoundIcon">false</bool>
+     <!-- Corner radius of system dialogs -->
+-    <dimen name="config_dialogCornerRadius">8dp</dimen>
++    <dimen name="config_dialogCornerRadius">4dp</dimen>
+     <!-- Corner radius for bottom sheet system dialogs -->
+-    <dimen name="config_bottomDialogCornerRadius">16dp</dimen>
+-    <!-- Corner radius of search bars and cards -->
+-    <dimen name="config_cardCornerRadius">12dp</dimen>
++    <dimen name="config_bottomDialogCornerRadius">8dp</dimen>
++
+ </resources>
++
+diff --git a/packages/overlays/IconShapeTaperedRectOverlay/res/values/config.xml b/packages/overlays/IconShapeTaperedRectOverlay/res/values/config.xml
+index 9419368906d..bc060f98ae8 100644
+--- a/packages/overlays/IconShapeTaperedRectOverlay/res/values/config.xml
++++ b/packages/overlays/IconShapeTaperedRectOverlay/res/values/config.xml
+@@ -22,9 +22,7 @@
+     <!-- Corner radius of system dialogs -->
+     <dimen name="config_dialogCornerRadius">2dp</dimen>
+     <!-- Corner radius for bottom sheet system dialogs -->
+-    <dimen name="config_bottomDialogCornerRadius">4dp</dimen>
++    <dimen name="config_bottomDialogCornerRadius">2dp</dimen>
+     <!-- Tile stroke width -->
+     <dimen name="config_qsTileStrokeWidthInactive">1dp</dimen>
+-    <!-- Corner radius of search bars and cards -->
+-    <dimen name="config_cardCornerRadius">1dp</dimen>
+ </resources>
+diff --git a/packages/overlays/IconShapeTeardropOverlay/res/values/config.xml b/packages/overlays/IconShapeTeardropOverlay/res/values/config.xml
+index e513afcb6a9..b6ee412e591 100644
+--- a/packages/overlays/IconShapeTeardropOverlay/res/values/config.xml
++++ b/packages/overlays/IconShapeTeardropOverlay/res/values/config.xml
+@@ -22,10 +22,9 @@
+     <!-- Flag indicating whether round icons should be parsed from the application manifest. -->
+     <bool name="config_useRoundIcon">false</bool>
+     <!-- Corner radius of system dialogs -->
+-    <dimen name="config_dialogCornerRadius">12dp</dimen>
++    <dimen name="config_dialogCornerRadius">8dp</dimen>
+     <!-- Corner radius for bottom sheet system dialogs -->
+-    <dimen name="config_bottomDialogCornerRadius">24dp</dimen>
+-    <!-- Corner radius of search bars and cards -->
+-    <dimen name="config_cardCornerRadius">12dp</dimen>
++    <dimen name="config_bottomDialogCornerRadius">16dp</dimen>
++
+ </resources>
+ 
+diff --git a/packages/overlays/IconShapeVesselOverlay/res/values/config.xml b/packages/overlays/IconShapeVesselOverlay/res/values/config.xml
+index 957edeb00ed..86d31f6450b 100644
+--- a/packages/overlays/IconShapeVesselOverlay/res/values/config.xml
++++ b/packages/overlays/IconShapeVesselOverlay/res/values/config.xml
+@@ -20,9 +20,8 @@
+     <!-- Flag indicating whether round icons should be parsed from the application manifest. -->
+     <bool name="config_useRoundIcon">false</bool>
+     <!-- Corner radius of system dialogs -->
+-    <dimen name="config_dialogCornerRadius">12dp</dimen>
++    <dimen name="config_dialogCornerRadius">8dp</dimen>
+     <!-- Corner radius for bottom sheet system dialogs -->
+-    <dimen name="config_bottomDialogCornerRadius">24dp</dimen>
+-    <!-- Corner radius of search bars and cards -->
+-    <dimen name="config_cardCornerRadius">12dp</dimen>
++    <dimen name="config_bottomDialogCornerRadius">16dp</dimen>
++
+ </resources>
+-- 
+2.25.1
+

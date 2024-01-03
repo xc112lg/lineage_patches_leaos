@@ -1,0 +1,32 @@
+From b8ed5ab94b33e855256acb57fb2a59abe5d76308 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 18:57:19 +0000
+Subject: [PATCH 05/52] Revert "FODCircleView: Always update FODAnimation
+ position"
+
+This reverts commit 8a9eab270964558d84b70a87422347eb1e5731c4.
+---
+ .../src/com/android/systemui/biometrics/FODCircleView.java | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index bf2a92712aa..fc9aa64b0cb 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -665,10 +665,9 @@ public class FODCircleView extends ImageView implements TunerService.Tunable, Co
+         if (mIsDreaming) {
+             mParams.x += mDreamingOffsetX;
+             mParams.y += mDreamingOffsetY;
+-        }
+-
+-        if (mFODAnimation != null && mIsRecognizingAnimEnabled) {
+-            mFODAnimation.updateParams(mParams.y);
++            if (mFODAnimation != null && mIsRecognizingAnimEnabled) {
++                mFODAnimation.updateParams(mParams.y);
++            }
+         }
+ 
+         mWindowManager.updateViewLayout(this, mParams);
+-- 
+2.30.2
+

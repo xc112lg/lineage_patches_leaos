@@ -1,0 +1,45 @@
+From 7ec7668b615a28669e6ba87e2814fb3ce1480250 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 19:28:28 +0000
+Subject: [PATCH 32/52] Revert "SystemUI: Add remaining FOD animations"
+
+This reverts commit 0b7cc67a4268d6eb4d72b14be5f692cc36b1a5ba.
+---
+ .../src/com/android/systemui/biometrics/FODAnimation.java | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java
+index 50ec492d095..b62d2ea7181 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java
+@@ -44,27 +44,19 @@ public class FODAnimation extends ImageView {
+     private final int[] ANIMATION_STYLES = {
+         R.drawable.fod_miui_normal_recognizing_anim,
+         R.drawable.fod_miui_aod_recognizing_anim,
+-        R.drawable.fod_miui_aurora_recognizing_anim,
+-        R.drawable.fod_miui_aurora_cas_recognizing_anim,
+         R.drawable.fod_miui_light_recognizing_anim,
+         R.drawable.fod_miui_pop_recognizing_anim,
+         R.drawable.fod_miui_pulse_recognizing_anim,
+         R.drawable.fod_miui_pulse_recognizing_white_anim,
+         R.drawable.fod_miui_rhythm_recognizing_anim,
+-        R.drawable.fod_miui_star_cas_recognizing_anim,
+         R.drawable.fod_op_cosmos_recognizing_anim,
+-        R.drawable.fod_op_energy_recognizing_anim,
+         R.drawable.fod_op_mclaren_recognizing_anim,
+-        R.drawable.fod_op_ripple_recognizing_anim,
+         R.drawable.fod_op_stripe_recognizing_anim,
+         R.drawable.fod_op_wave_recognizing_anim,
+         R.drawable.fod_pureview_dna_recognizing_anim,
+         R.drawable.fod_pureview_future_recognizing_anim,
+         R.drawable.fod_pureview_halo_ring_recognizing_anim,
+         R.drawable.fod_pureview_molecular_recognizing_anim,
+-        R.drawable.fod_rog_fusion_recognizing_anim,
+-        R.drawable.fod_rog_pulsar_recognizing_anim,
+-        R.drawable.fod_rog_supernova_recognizing_anim,
+     };
+ 
+     public FODAnimation(Context context, int mPositionX, int mPositionY) {
+-- 
+2.30.2
+

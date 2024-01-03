@@ -1,0 +1,50 @@
+From b3ed78c631737bb1168a1b709d14defedfcddbfb Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sat, 15 Aug 2020 09:36:19 -0400
+Subject: [PATCH 3/4] set build name (crDroid)
+
+---
+ config/common.mk | 23 ++---------------------
+ 1 file changed, 2 insertions(+), 21 deletions(-)
+
+diff --git a/config/common.mk b/config/common.mk
+index 4aa0266d..1db6b6c3 100644
+--- a/config/common.mk
++++ b/config/common.mk
+@@ -188,31 +188,12 @@ PRODUCT_VERSION_MINOR = 0
+ # Increase CR Version with each major release.
+ CR_VERSION := 7.16
+ 
+-LINEAGE_VERSION := crDroidAndroid-$(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(shell date +%Y%m%d)-$(LINEAGE_BUILD)-v$(CR_VERSION)
+-LINEAGE_DISPLAY_VERSION := crDroidAndroid-$(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(LINEAGE_BUILD)-v$(CR_VERSION)
++LINEAGE_VERSION := crDroidAndroid-$(PRODUCT_VERSION_MAJOR).$(PRODUCT_VERSION_MINOR)-$(shell date +%Y%m%d)-GSI-v$(CR_VERSION)
++LINEAGE_DISPLAY_VERSION := $(LINEAGE_VERSION)
+ 
+ PRODUCT_EXTRA_RECOVERY_KEYS += \
+     vendor/lineage/build/target/product/security/lineage
+ 
+ -include vendor/lineage-priv/keys/keys.mk
+-
+-ifneq ($(PRODUCT_DEFAULT_DEV_CERTIFICATE),)
+-ifneq ($(PRODUCT_DEFAULT_DEV_CERTIFICATE),build/target/product/security/testkey)
+-    ifneq ($(LINEAGE_BUILDTYPE), UNOFFICIAL)
+-        ifndef TARGET_VENDOR_RELEASE_BUILD_ID
+-            ifneq ($(LINEAGE_EXTRAVERSION),)
+-                # Remove leading dash from LINEAGE_EXTRAVERSION
+-                LINEAGE_EXTRAVERSION := $(shell echo $(LINEAGE_EXTRAVERSION) | sed 's/-//')
+-                TARGET_VENDOR_RELEASE_BUILD_ID := $(LINEAGE_EXTRAVERSION)
+-            else
+-                TARGET_VENDOR_RELEASE_BUILD_ID := $(shell date -u +%Y%m%d)
+-            endif
+-        else
+-            TARGET_VENDOR_RELEASE_BUILD_ID := $(TARGET_VENDOR_RELEASE_BUILD_ID)
+-        endif
+-    endif
+-endif
+-endif
+-
+ -include $(WORKSPACE)/build_env/image-auto-bits.mk
+ -include vendor/lineage/config/partner_gms.mk
+-- 
+2.25.1
+

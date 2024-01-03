@@ -1,0 +1,75 @@
+From 16949b75843c46543ab26caba26374f341284865 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 19:27:24 +0000
+Subject: [PATCH 29/52] Revert "Refactor how FOD Animation is hidden"
+
+This reverts commit e4cc02f6b54072483534e2b939fb35a2b7d41e85.
+---
+ .../android/systemui/biometrics/FODAnimation.java  | 14 ++------------
+ .../android/systemui/biometrics/FODCircleView.java |  6 ++++--
+ 2 files changed, 6 insertions(+), 14 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java
+index a1525f2eb1e..4de5652806d 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java
+@@ -39,7 +39,6 @@ public class FODAnimation extends ImageView {
+     private AnimationDrawable recognizingAnim;
+     private WindowManager mWindowManager;
+     private boolean mIsKeyguard;
+-    private boolean mIsRecognizingAnimEnabled;
+ 
+     private int mSelectedAnim;
+     private final int[] ANIMATION_STYLES = {
+@@ -87,22 +86,13 @@ public class FODAnimation extends ImageView {
+         mAnimParams.y = mPositionY - (mAnimationSize / 2) + mAnimationOffset;
+ 
+         setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+-
+-        mIsRecognizingAnimEnabled = Settings.System.getInt(mContext.getContentResolver(),
+-            Settings.System.FOD_RECOGNIZING_ANIMATION, 0) != 0;
+-
+-        update(mIsRecognizingAnimEnabled);
++        update();
+     }
+ 
+-    public void update(boolean isEnabled) {
++    public void update() {
+         mSelectedAnim = Settings.System.getInt(mContext.getContentResolver(),
+                 Settings.System.FOD_ANIM, 0);
+ 
+-        if (isEnabled)
+-            setAlpha(1.0f);
+-        else
+-            setAlpha(0.0f);
+-
+         setBackgroundResource(ANIMATION_STYLES[mSelectedAnim]);
+         recognizingAnim = (AnimationDrawable) getBackground();
+     }
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index 9716082132f..a129ff812a9 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -328,7 +328,9 @@ public class FODCircleView extends ImageView {
+ 
+         if (event.getAction() == MotionEvent.ACTION_DOWN && newIsInside) {
+             showCircle();
+-            mHandler.post(() -> mFODAnimation.showFODanimation());
++            if (mIsRecognizingAnimEnabled) {
++                mHandler.post(() -> mFODAnimation.showFODanimation());
++            }
+             return true;
+         } else if (event.getAction() == MotionEvent.ACTION_UP) {
+             hideCircle();
+@@ -489,7 +491,7 @@ public class FODCircleView extends ImageView {
+         mIsRecognizingAnimEnabled = Settings.System.getInt(mContext.getContentResolver(),
+                 Settings.System.FOD_RECOGNIZING_ANIMATION, 0) != 0;
+         if (mFODAnimation != null) {
+-            mFODAnimation.update(mIsRecognizingAnimEnabled);
++            mFODAnimation.update();
+         }
+     }
+ 
+-- 
+2.30.2
+

@@ -1,0 +1,137 @@
+From 9838c5ffb3e2a2db13475a28ab1410691fe17249 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 18:57:22 +0000
+Subject: [PATCH 07/52] Revert "Add FOD system overlay types (#665)"
+
+This reverts commit f542536c434a14d5f5e47c69b7f6d3b344124d78.
+---
+ core/java/android/view/WindowManager.java           | 12 ------------
+ .../android/systemui/biometrics/FODCircleView.java  |  3 +--
+ .../android/server/policy/WindowManagerPolicy.java  |  8 +-------
+ .../java/com/android/server/wm/DisplayPolicy.java   | 13 ++-----------
+ 4 files changed, 4 insertions(+), 32 deletions(-)
+
+diff --git a/core/java/android/view/WindowManager.java b/core/java/android/view/WindowManager.java
+index 799ef0d01c0..98155de99b6 100644
+--- a/core/java/android/view/WindowManager.java
++++ b/core/java/android/view/WindowManager.java
+@@ -1224,18 +1224,6 @@ public interface WindowManager extends ViewManager {
+         // TODO(b/155781676): Remove and replace call points with trustedOverlay when that is ready.
+         public static final int TYPE_TRUSTED_APPLICATION_OVERLAY = FIRST_SYSTEM_WINDOW + 42;
+ 
+-        /**
+-         * Window type: Fingerprint overlay
+-         * @hide
+-         */
+-        public static final int TYPE_SYSTEM_FINGERPRINT = FIRST_SYSTEM_WINDOW + 43;
+-
+-        /**
+-         * Window type: Fingerprint high light overlay
+-         * @hide
+-         */
+-        public static final int TYPE_SYSTEM_FINGERPRINT_HIGH_LIGHT = FIRST_SYSTEM_WINDOW + 44;
+-
+         /**
+          * End of types of system windows.
+          */
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index bdf1d72fd42..d70c260f29a 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -340,14 +340,13 @@ public class FODCircleView extends ImageView implements TunerService.Tunable {
+         mParams.format = PixelFormat.TRANSLUCENT;
+ 
+         mParams.packageName = "android";
+-        mParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_FINGERPRINT;
++        mParams.type = WindowManager.LayoutParams.TYPE_DISPLAY_OVERLAY;
+         mParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
+                 WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+         mParams.gravity = Gravity.TOP | Gravity.LEFT;
+ 
+         mPressedParams.copyFrom(mParams);
+-        mPressedParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_FINGERPRINT_HIGH_LIGHT;
+         mPressedParams.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND |
+                 WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+ 
+diff --git a/services/core/java/com/android/server/policy/WindowManagerPolicy.java b/services/core/java/com/android/server/policy/WindowManagerPolicy.java
+index 698ba4923ad..cadbe51c804 100644
+--- a/services/core/java/com/android/server/policy/WindowManagerPolicy.java
++++ b/services/core/java/com/android/server/policy/WindowManagerPolicy.java
+@@ -54,8 +54,6 @@ import static android.view.WindowManager.LayoutParams.TYPE_STATUS_BAR_SUB_PANEL;
+ import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+ import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG;
+ import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
+-import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_FINGERPRINT;
+-import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_FINGERPRINT_HIGH_LIGHT;
+ import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
+ import static android.view.WindowManager.LayoutParams.TYPE_TOAST;
+ import static android.view.WindowManager.LayoutParams.TYPE_TRUSTED_APPLICATION_OVERLAY;
+@@ -859,10 +857,6 @@ public interface WindowManagerPolicy extends WindowManagerPolicyConstants {
+             case TYPE_POINTER:
+                 // the (mouse) pointer layer
+                 return  35;
+-            case TYPE_SYSTEM_FINGERPRINT:
+-                return  36;
+-            case TYPE_SYSTEM_FINGERPRINT_HIGH_LIGHT:
+-                return  37;
+             default:
+                 Slog.e("WindowManager", "Unknown window type: " + type);
+                 return APPLICATION_LAYER;
+@@ -870,7 +864,7 @@ public interface WindowManagerPolicy extends WindowManagerPolicyConstants {
+     }
+ 
+     default int getMaxWindowLayer() {
+-        return 38;
++        return 35;
+     }
+ 
+     /**
+diff --git a/services/core/java/com/android/server/wm/DisplayPolicy.java b/services/core/java/com/android/server/wm/DisplayPolicy.java
+index f69f74c94cc..dfc7aee3f34 100644
+--- a/services/core/java/com/android/server/wm/DisplayPolicy.java
++++ b/services/core/java/com/android/server/wm/DisplayPolicy.java
+@@ -97,8 +97,6 @@ import static android.view.WindowManager.LayoutParams.TYPE_STATUS_BAR_PANEL;
+ import static android.view.WindowManager.LayoutParams.TYPE_STATUS_BAR_SUB_PANEL;
+ import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+ import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ERROR;
+-import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_FINGERPRINT;
+-import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_FINGERPRINT_HIGH_LIGHT;
+ import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
+ import static android.view.WindowManager.LayoutParams.TYPE_TOAST;
+ import static android.view.WindowManager.LayoutParams.TYPE_TRUSTED_APPLICATION_OVERLAY;
+@@ -1734,7 +1732,6 @@ public class DisplayPolicy {
+         // For purposes of putting out fake window up to steal focus, we will
+         // drive nav being hidden only by whether it is requested.
+         final int sysui = mLastSystemUiFlags;
+-        boolean fodState = true;
+         final int behavior = mLastBehavior;
+         final InsetsSourceProvider provider =
+                 mDisplayContent.getInsetsStateController().peekSourceProvider(ITYPE_NAVIGATION_BAR);
+@@ -1763,12 +1760,7 @@ public class DisplayPolicy {
+         // be hidden (because of the screen aspect ratio), then take that into account.
+         navVisible |= !canHideNavigationBar();
+ 
+-        if (mFocusedWindow != null && mFocusedWindow.getAttrs().type == TYPE_SYSTEM_FINGERPRINT
+-                && !mService.mPowerManager.isInteractive()) {
+-            fodState = false;
+-        }
+-
+-        boolean updateSysUiVisibility = layoutNavigationBar(displayFrames, uiMode, navVisible & fodState,
++        boolean updateSysUiVisibility = layoutNavigationBar(displayFrames, uiMode, navVisible,
+                 navTranslucent, navAllowedHidden, notificationShadeForcesShowingNavigation,
+                 null /* simulatedContentFrame */);
+         if (DEBUG_LAYOUT) Slog.i(TAG, "mDock rect:" + displayFrames.mDock);
+@@ -2508,8 +2500,7 @@ public class DisplayPolicy {
+                     df.set(displayFrames.mUnrestricted);
+                     pf.set(displayFrames.mUnrestricted);
+                     if (DEBUG_LAYOUT) Slog.v(TAG, "Laying out navigation bar window: " + pf);
+-                } else if ((type == TYPE_SECURE_SYSTEM_OVERLAY || type == TYPE_SCREENSHOT
+-                        || type == TYPE_SYSTEM_FINGERPRINT || type == TYPE_SYSTEM_FINGERPRINT_HIGH_LIGHT)
++                } else if ((type == TYPE_SECURE_SYSTEM_OVERLAY || type == TYPE_SCREENSHOT)
+                         && ((fl & FLAG_FULLSCREEN) != 0)) {
+                     // Fullscreen secure system overlays get what they ask for. Screenshot region
+                     // selection overlay should also expand to full screen.
+-- 
+2.30.2
+

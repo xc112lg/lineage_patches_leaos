@@ -1,0 +1,26 @@
+From f86229bc01797d05c65013b5b67c12cdc575575f Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 19:39:04 +0000
+Subject: [PATCH 44/52] Revert "FODCircleView: Hide fod when screen is off"
+
+This reverts commit de06a3c7cc67bb116f321a8e0c192585eb1e6c9e.
+---
+ .../src/com/android/systemui/biometrics/FODCircleView.java      | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index a79e2d9e00f..dee208705b2 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -167,7 +167,7 @@ public class FODCircleView extends ImageView {
+         }
+ 
+         @Override
+-        public void onScreenTurnedOff() {
++        public void onStartedGoingToSleep(int why) {
+             hide();
+         }
+ 
+-- 
+2.30.2
+
