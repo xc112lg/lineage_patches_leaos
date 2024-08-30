@@ -1,0 +1,29 @@
+From 5f362cf502b04b66dd15922095c0445ab21f1aa9 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Thu, 13 May 2021 07:27:40 -0400
+Subject: [PATCH] Revert "PGO for libbinder"
+
+This reverts commit ac980b60684f10832cab6f2709521624114bfab0.
+---
+ libs/binder/Android.bp | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/libs/binder/Android.bp b/libs/binder/Android.bp
+index 24a1b1824..f1ce7582f 100644
+--- a/libs/binder/Android.bp
++++ b/libs/binder/Android.bp
+@@ -162,11 +162,6 @@ cc_library {
+     lto: {
+         thin: true,
+     },
+-
+-    pgo: {
+-        sampling: true,
+-        profile_file: "libbinder/libbinder.profdata",
+-    },
+ }
+ 
+ // AIDL interface between libbinder and framework.jar
+-- 
+2.17.1
+

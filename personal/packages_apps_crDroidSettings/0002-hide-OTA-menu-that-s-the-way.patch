@@ -1,0 +1,34 @@
+From 13029b29540e6ee001e3b4fb6e9a88cbff323e20 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Fri, 17 Dec 2021 20:54:50 +0000
+Subject: [PATCH 2/2] hide OTA menu, that's the way
+
+---
+ res/xml/crdroid_settings_about.xml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/res/xml/crdroid_settings_about.xml b/res/xml/crdroid_settings_about.xml
+index 24ee00ee..1150292c 100644
+--- a/res/xml/crdroid_settings_about.xml
++++ b/res/xml/crdroid_settings_about.xml
+@@ -90,7 +90,7 @@
+         android:title="@string/crdroid_sponsor_title"
+         android:summary="@string/crdroid_sponsor_summary" />
+ 
+-    <!-- crDroid OTA update -->
++    <!-- crDroid OTA update
+     <Preference
+         android:key="system_update_settings"
+         android:title="@string/ota_crdroid_title"
+@@ -98,7 +98,7 @@
+         android:icon="@drawable/ic_update"
+         settings:controller="com.android.settings.system.SystemUpdatePreferenceController">
+         <intent android:action="android.settings.SYSTEM_UPDATE_SETTINGS" />
+-    </Preference>
++    </Preference> -->
+ 
+     <!-- crDroid Drill -->
+     <Preference
+-- 
+2.25.1
+

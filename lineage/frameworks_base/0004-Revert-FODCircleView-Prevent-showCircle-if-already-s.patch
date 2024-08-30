@@ -1,0 +1,27 @@
+From fe2f6bef514101a036552917e89a45c725bb9e56 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Wed, 13 Oct 2021 00:54:09 +0000
+Subject: [PATCH 04/52] Revert "FODCircleView: Prevent showCircle if already
+ showing"
+
+This reverts commit 82ed59ef6195d41c992b12290dda1bdf02b6a034.
+---
+ .../src/com/android/systemui/biometrics/FODCircleView.java      | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index 09c45d7bee4..bf2a92712aa 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -534,7 +534,7 @@ public class FODCircleView extends ImageView implements TunerService.Tunable, Co
+     }
+ 
+     public void showCircle() {
+-        if (mFading || mTouchedOutside || mIsCircleShowing) return;
++        if (mFading || mTouchedOutside) return;
+         mIsCircleShowing = true;
+ 
+         setKeepScreenOn(true);
+-- 
+2.30.2
+

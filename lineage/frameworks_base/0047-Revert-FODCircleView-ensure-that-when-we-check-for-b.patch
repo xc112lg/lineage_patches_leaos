@@ -1,0 +1,27 @@
+From 9f6a90240727ef955715a21c0623a66fb73ecd1e Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 19:43:47 +0000
+Subject: [PATCH 47/52] Revert "FODCircleView: ensure that when we check for
+ bouncer, we're on keyguard."
+
+This reverts commit 9f34b9661810284300cd5a55ed5aff178ce06cc0.
+---
+ .../src/com/android/systemui/biometrics/FODCircleView.java      | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index 4012e6112af..f32899fe3fb 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -381,7 +381,7 @@ public class FODCircleView extends ImageView {
+             return;
+         }
+ 
+-        if (mIsKeyguard && mUpdateMonitor.getUserCanSkipBouncer(mUpdateMonitor.getCurrentUser())) {
++        if (mUpdateMonitor.getUserCanSkipBouncer(mUpdateMonitor.getCurrentUser())) {
+             // Ignore show calls if user can skip bouncer
+             return;
+         }
+-- 
+2.30.2
+

@@ -1,0 +1,116 @@
+From ded7e02116c2f07f157a081a1e80fe30d743daaa Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 28 Feb 2021 00:30:57 -0500
+Subject: [PATCH] Revert "RenderEngine: Rev down blur filter shader when device
+ is legacy"
+
+This reverts commit bf13c3148f3c5806e6e574a8288282e152b0b10a.
+---
+ libs/renderengine/Android.bp                |  5 --
+ libs/renderengine/gl/filters/BlurFilter.cpp | 60 ---------------------
+ 2 files changed, 65 deletions(-)
+
+diff --git a/libs/renderengine/Android.bp b/libs/renderengine/Android.bp
+index 7b92e7723..eb6080fc2 100644
+--- a/libs/renderengine/Android.bp
++++ b/libs/renderengine/Android.bp
+@@ -84,11 +84,6 @@ cc_library_static {
+     lto: {
+         thin: true,
+     },
+-    product_variables: {
+-        product_shipping_api_level: {
+-            cflags: ["-DPRODUCT_SHIPPING_API_LEVEL=%d"],
+-        },
+-    },
+ }
+ 
+ cc_library_static {
+diff --git a/libs/renderengine/gl/filters/BlurFilter.cpp b/libs/renderengine/gl/filters/BlurFilter.cpp
+index 0a7ac309e..19f18c0a7 100644
+--- a/libs/renderengine/gl/filters/BlurFilter.cpp
++++ b/libs/renderengine/gl/filters/BlurFilter.cpp
+@@ -37,7 +37,6 @@ BlurFilter::BlurFilter(GLESRenderEngine& engine)
+         mPongFbo(engine),
+         mMixProgram(engine),
+         mBlurProgram(engine) {
+-    ALOGI("PRODUCT_SHIPPING_API_LEVEL=%d", PRODUCT_SHIPPING_API_LEVEL);
+     mMixProgram.compile(getVertexShader(), getMixFragShader());
+     mMPosLoc = mMixProgram.getAttributeLocation("aPosition");
+     mMUvLoc = mMixProgram.getAttributeLocation("aUV");
+@@ -207,7 +206,6 @@ status_t BlurFilter::render(bool multiPass) {
+     return NO_ERROR;
+ }
+ 
+-#if PRODUCT_SHIPPING_API_LEVEL >= 21
+ string BlurFilter::getVertexShader() const {
+     return R"SHADER(#version 310 es
+         precision mediump float;
+@@ -264,64 +262,6 @@ string BlurFilter::getMixFragShader() const {
+     )SHADER";
+     return shader;
+ }
+-#else
+-string BlurFilter::getVertexShader() const {
+-    return R"SHADER(#version 300 es
+-        precision mediump float;
+-
+-        in vec2 aPosition;
+-        in highp vec2 aUV;
+-        out highp vec2 vUV;
+-
+-        void main() {
+-            vUV = aUV;
+-            gl_Position = vec4(aPosition, 0.0, 1.0);
+-        }
+-    )SHADER";
+-}
+-
+-string BlurFilter::getFragmentShader() const {
+-    return R"SHADER(#version 300 es
+-        precision mediump float;
+-
+-        uniform sampler2D uTexture;
+-        uniform vec2 uOffset;
+-
+-        in highp vec2 vUV;
+-        out vec4 fragColor;
+-
+-        void main() {
+-            fragColor  = texture(uTexture, vUV, 0.0);
+-            fragColor += texture(uTexture, vUV + vec2( uOffset.x,  uOffset.y), 0.0);
+-            fragColor += texture(uTexture, vUV + vec2( uOffset.x, -uOffset.y), 0.0);
+-            fragColor += texture(uTexture, vUV + vec2(-uOffset.x,  uOffset.y), 0.0);
+-            fragColor += texture(uTexture, vUV + vec2(-uOffset.x, -uOffset.y), 0.0);
+-
+-            fragColor = vec4(fragColor.rgb * 0.2, 1.0);
+-        }
+-    )SHADER";
+-}
+-
+-string BlurFilter::getMixFragShader() const {
+-    string shader = R"SHADER(#version 300 es
+-        precision mediump float;
+-
+-        in highp vec2 vUV;
+-        out vec4 fragColor;
+-
+-        uniform sampler2D uCompositionTexture;
+-        uniform sampler2D uTexture;
+-        uniform float uMix;
+-
+-        void main() {
+-            vec4 blurred = texture(uTexture, vUV);
+-            vec4 composition = texture(uCompositionTexture, vUV);
+-            fragColor = mix(composition, blurred, uMix);
+-        }
+-    )SHADER";
+-    return shader;
+-}
+-#endif
+ 
+ } // namespace gl
+ } // namespace renderengine
+-- 
+2.17.1
+

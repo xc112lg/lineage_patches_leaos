@@ -1,0 +1,32 @@
+From 31f0104ba83edf251b947caec72de7e17a9a6c5b Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 18:57:15 +0000
+Subject: [PATCH 02/52] Revert "Rename file name for op8 icon"
+
+This reverts commit 913c0663e23b92cae654f19fdfddaf191b9c017d.
+---
+ ...light_yellow.png => fod_icon_pressed_ffffe6.png} | Bin
+ .../android/systemui/biometrics/FODCircleView.java  |   2 +-
+ 2 files changed, 1 insertion(+), 1 deletion(-)
+ rename packages/SystemUI/res/drawable-nodpi/{fod_icon_pressed_light_yellow.png => fod_icon_pressed_ffffe6.png} (100%)
+
+diff --git a/packages/SystemUI/res/drawable-nodpi/fod_icon_pressed_light_yellow.png b/packages/SystemUI/res/drawable-nodpi/fod_icon_pressed_ffffe6.png
+similarity index 100%
+rename from packages/SystemUI/res/drawable-nodpi/fod_icon_pressed_light_yellow.png
+rename to packages/SystemUI/res/drawable-nodpi/fod_icon_pressed_ffffe6.png
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index d29f33474e2..09c45d7bee4 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -167,7 +167,7 @@ public class FODCircleView extends ImageView implements TunerService.Tunable, Co
+         R.drawable.fod_icon_pressed_cyan,
+         R.drawable.fod_icon_pressed_green,
+         R.drawable.fod_icon_pressed_yellow,
+-        R.drawable.fod_icon_pressed_light_yellow
++        R.drawable.fod_icon_pressed_ffffe6
+     };
+ 
+     private IFingerprintInscreenCallback mFingerprintInscreenCallback =
+-- 
+2.30.2
+

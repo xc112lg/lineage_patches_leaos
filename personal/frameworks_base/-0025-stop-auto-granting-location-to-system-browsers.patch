@@ -1,0 +1,58 @@
+From 542bed9f8e44605a047a859310f492c95c44bd9d Mon Sep 17 00:00:00 2001
+From: Daniel Micay <danielmicay@gmail.com>
+Date: Sun, 17 Mar 2019 19:54:30 -0400
+Subject: [PATCH 025/115] stop auto-granting location to system browsers
+
+---
+ .../DefaultPermissionGrantPolicy.java         | 28 +++++++++----------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/services/core/java/com/android/server/pm/permission/DefaultPermissionGrantPolicy.java b/services/core/java/com/android/server/pm/permission/DefaultPermissionGrantPolicy.java
+index 096aa8890fd..ee5c2cec79a 100644
+--- a/services/core/java/com/android/server/pm/permission/DefaultPermissionGrantPolicy.java
++++ b/services/core/java/com/android/server/pm/permission/DefaultPermissionGrantPolicy.java
+@@ -692,17 +692,17 @@ public final class DefaultPermissionGrantPolicy {
+                 userId, CONTACTS_PERMISSIONS, CALENDAR_PERMISSIONS);
+ 
+         // Browser
+-        String browserPackage = ArrayUtils.firstOrNull(getKnownPackages(
+-                PackageManagerInternal.PACKAGE_BROWSER, userId));
+-        if (browserPackage == null) {
+-            browserPackage = getDefaultSystemHandlerActivityPackageForCategory(pm,
+-                    Intent.CATEGORY_APP_BROWSER, userId);
+-            if (!pm.isSystemPackage(browserPackage)) {
+-                browserPackage = null;
+-            }
+-        }
+-        grantPermissionsToPackage(pm, browserPackage, userId, false /* ignoreSystemPackage */,
+-                true /*whitelistRestrictedPermissions*/, FOREGROUND_LOCATION_PERMISSIONS);
++        //String browserPackage = ArrayUtils.firstOrNull(getKnownPackages(
++        //        PackageManagerInternal.PACKAGE_BROWSER, userId));
++        //if (browserPackage == null) {
++        //    browserPackage = getDefaultSystemHandlerActivityPackageForCategory(pm,
++        //            Intent.CATEGORY_APP_BROWSER, userId);
++        //    if (!pm.isSystemPackage(browserPackage)) {
++        //        browserPackage = null;
++        //    }
++        //}
++        //grantPermissionsToPackage(pm, browserPackage, userId, false /* ignoreSystemPackage */,
++        //        true /*whitelistRestrictedPermissions*/, FOREGROUND_LOCATION_PERMISSIONS);
+ 
+         // Voice interaction
+         if (voiceInteractPackageNames != null) {
+@@ -1091,9 +1091,9 @@ public final class DefaultPermissionGrantPolicy {
+     }
+ 
+     public void grantDefaultPermissionsToDefaultBrowser(String packageName, int userId) {
+-        Log.i(TAG, "Granting permissions to default browser for user:" + userId);
+-        grantPermissionsToSystemPackage(NO_PM_CACHE, packageName, userId,
+-                FOREGROUND_LOCATION_PERMISSIONS);
++        //Log.i(TAG, "Granting permissions to default browser for user:" + userId);
++        //grantPermissionsToSystemPackage(NO_PM_CACHE, packageName, userId,
++        //        FOREGROUND_LOCATION_PERMISSIONS);
+     }
+ 
+     private String getDefaultSystemHandlerActivityPackage(PackageManagerWrapper pm,
+-- 
+2.25.1
+

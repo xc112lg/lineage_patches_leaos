@@ -1,0 +1,26 @@
+From 72349c4b10791f9a2d477f147311de44f9ce9397 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 18:57:27 +0000
+Subject: [PATCH 11/52] Revert "FODCircleView: Do not run update position first
+ boot"
+
+This reverts commit 5499332edd32c46ba3e44a53f56323fd078bc845.
+---
+ .../src/com/android/systemui/biometrics/FODCircleView.java       | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index 0ba36ed00f7..e5db9c4ab78 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -367,6 +367,7 @@ public class FODCircleView extends ImageView implements TunerService.Tunable {
+ 
+         mWindowManager.addView(this, mParams);
+ 
++        updatePosition();
+         hide();
+ 
+         mLockPatternUtils = new LockPatternUtils(mContext);
+-- 
+2.30.2
+

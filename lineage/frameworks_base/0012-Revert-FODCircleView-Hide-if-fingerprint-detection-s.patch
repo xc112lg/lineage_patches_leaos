@@ -1,0 +1,27 @@
+From fff2016516bdbff8837eaeed7d48e2f037cfafda Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 18:57:29 +0000
+Subject: [PATCH 12/52] Revert "FODCircleView: Hide if fingerprint detection
+ stops"
+
+This reverts commit 7760bfe0e78c22a8f4219a7a69f296febfee429f.
+---
+ .../src/com/android/systemui/biometrics/FODCircleView.java      | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index e5db9c4ab78..a38526baeca 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -211,8 +211,6 @@ public class FODCircleView extends ImageView implements TunerService.Tunable {
+                 BiometricSourceType biometricSourceType) {
+             if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
+                 mIsBiometricRunning = running;
+-                if (!mIsBiometricRunning)
+-                    hide();
+             }
+         }
+ 
+-- 
+2.30.2
+

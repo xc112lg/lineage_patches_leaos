@@ -1,0 +1,156 @@
+From a5926859f284f66995d3ec3a9b8b7cf7ceacdd82 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 18:57:35 +0000
+Subject: [PATCH 16/52] Revert "FOD: allow user to disable night light when
+ active [1/2]"
+
+This reverts commit c2b669f6c85bdbb1687c78f610da3367c60e0482.
+---
+ core/java/android/provider/Settings.java      |  6 ---
+ core/res/res/values/cr_config.xml             |  3 --
+ core/res/res/values/cr_symbols.xml            |  3 --
+ .../biometrics/FODCircleViewImpl.java         | 40 -------------------
+ 4 files changed, 52 deletions(-)
+
+diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
+index 816996172ca..b66c0369374 100755
+--- a/core/java/android/provider/Settings.java
++++ b/core/java/android/provider/Settings.java
+@@ -5470,12 +5470,6 @@ public final class Settings {
+          * @hide
+          */
+         public static final String FOD_COLOR = "fod_color";
+-        
+-        /**
+-         * FOD night light
+-         * @hide
+-         */
+-        public static final String FOD_NIGHT_LIGHT = "fod_night_light";
+ 
+         /** @hide */
+         public static final String BACK_GESTURE_HEIGHT = "back_gesture_height";
+diff --git a/core/res/res/values/cr_config.xml b/core/res/res/values/cr_config.xml
+index 6fbdb37d350..6afe79a3f75 100644
+--- a/core/res/res/values/cr_config.xml
++++ b/core/res/res/values/cr_config.xml
+@@ -70,9 +70,6 @@
+ 
+     <!-- Default fod pressed color -->
+     <integer name="config_fod_pressed_color">1</integer>
+-    
+-    <!-- NightLight FOD -->
+-    <bool name="disable_fod_night_light">false</bool>
+ 
+     <!-- Default value for FOD animation package resources -->
+     <string name="config_fodAnimationPackage" translatable="false">com.crdroid.fod.animations</string>
+diff --git a/core/res/res/values/cr_symbols.xml b/core/res/res/values/cr_symbols.xml
+index 0be8adcd8f8..95b8b044e59 100644
+--- a/core/res/res/values/cr_symbols.xml
++++ b/core/res/res/values/cr_symbols.xml
+@@ -79,9 +79,6 @@
+ 
+   <!-- Default fod pressed icon -->
+   <java-symbol type="integer" name="config_fod_pressed_color" />
+-  
+-  <!-- NightLight FOD -->
+-  <java-symbol type="bool" name="disable_fod_night_light"/>
+ 
+   <!-- Default value for FOD animation package resources -->
+   <java-symbol type="string" name="config_fodAnimationPackage" />
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleViewImpl.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleViewImpl.java
+index c3dd5c3e266..c5fb4ccee44 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleViewImpl.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleViewImpl.java
+@@ -18,15 +18,9 @@ package com.android.systemui.biometrics;
+ 
+ import android.content.Context;
+ import android.content.pm.PackageManager;
+-import android.content.res.Resources;
+-import android.hardware.display.ColorDisplayManager;
+-import android.os.Handler;
+-import android.os.SystemProperties;
+-import android.provider.Settings;
+ import android.util.Slog;
+ import android.view.View;
+ 
+-import com.android.internal.R;
+ import com.android.internal.util.crdroid.FodUtils;
+ 
+ import com.android.systemui.SystemUI;
+@@ -50,9 +44,6 @@ public class FODCircleViewImpl extends SystemUI implements CommandQueue.Callback
+     private final ArrayList<WeakReference<FODCircleViewImplCallback>>
+             mCallbacks = new ArrayList<>();
+     private final CommandQueue mCommandQueue;
+-    private boolean mDisableNightMode;
+-    private boolean mNightModeActive;
+-    private int mAutoModeState;
+ 
+     private boolean mIsFODVisible;
+ 
+@@ -81,7 +72,6 @@ public class FODCircleViewImpl extends SystemUI implements CommandQueue.Callback
+         } catch (RuntimeException e) {
+             Slog.e(TAG, "Failed to initialize FODCircleView", e);
+         }
+-        mDisableNightMode = mContext.getResources().getBoolean(R.bool.disable_fod_night_light);
+     }
+ 
+     @Override
+@@ -94,33 +84,20 @@ public class FODCircleViewImpl extends SystemUI implements CommandQueue.Callback
+                 }
+             }
+             mIsFODVisible = true;
+-            if (isNightLightEnabled()) {
+-                disableNightMode();
+-            }
+             mFodCircleView.show();
+         }
+     }
+ 
+-    private boolean isNightLightEnabled() {
+-       return Settings.System.getInt(mContext.getContentResolver(),
+-                Settings.System.FOD_NIGHT_LIGHT, mDisableNightMode ? 1 : 0) == 1;
+-    }
+-    
+     @Override
+     public void hideInDisplayFingerprintView() {
+         if (mFodCircleView != null) {
+-             if (isNightLightEnabled()) {
+             for (int i = 0; i < mCallbacks.size(); i++) {
+                 FODCircleViewImplCallback cb = mCallbacks.get(i).get();
+                 if (cb != null) {
+                     cb.onFODStatusChange(false);
+                 }
+             }
+-        }
+             mIsFODVisible = false;
+-            if (isNightLightEnabled()) {
+-                setNightMode(mNightModeActive, mAutoModeState);
+-            }
+             mFodCircleView.hide();
+         }
+     }
+@@ -154,21 +131,4 @@ public class FODCircleViewImpl extends SystemUI implements CommandQueue.Callback
+         callback.onFODStart();
+         callback.onFODStatusChange(mIsFODVisible);
+     }
+-
+-   private void disableNightMode() {
+-        ColorDisplayManager colorDisplayManager = mContext.getSystemService(ColorDisplayManager.class);
+-        mAutoModeState = colorDisplayManager.getNightDisplayAutoMode();
+-        mNightModeActive = colorDisplayManager.isNightDisplayActivated();
+-        colorDisplayManager.setNightDisplayActivated(false);
+-    }
+-
+-    private void setNightMode(boolean activated, int autoMode) {
+-        ColorDisplayManager colorDisplayManager = mContext.getSystemService(ColorDisplayManager.class);
+-        colorDisplayManager.setNightDisplayAutoMode(0);
+-        if (autoMode == 0) {
+-            colorDisplayManager.setNightDisplayActivated(activated);
+-        } else if (autoMode == 1 || autoMode == 2) {
+-            colorDisplayManager.setNightDisplayAutoMode(autoMode);
+-        }
+-    }
+ }
+-- 
+2.30.2
+

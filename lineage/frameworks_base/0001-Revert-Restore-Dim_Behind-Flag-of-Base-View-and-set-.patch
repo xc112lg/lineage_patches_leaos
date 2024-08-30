@@ -1,0 +1,41 @@
+From 713dfc916581563592e5f98b396faa0600054dd9 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 18:57:11 +0000
+Subject: [PATCH 01/52] Revert "Restore Dim_Behind Flag of Base View and set
+ dim amount to 0.0f This will fix problem onTouch of apparently boost
+ brightness for xiaomi sm8250 fod implementation. This will not fix totally
+ the problem, if into lineage fod hal implementation write on disp_param
+ command to enable fod_hbm display function, to solve need concomitant use of
+ composition engine."
+
+This reverts commit 560ee8aaf3f3c02680289f17d21e2057dfe13dfe.
+---
+ .../src/com/android/systemui/biometrics/FODCircleView.java   | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index 2d46a6290fc..d29f33474e2 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -347,8 +347,7 @@ public class FODCircleView extends ImageView implements TunerService.Tunable, Co
+         mParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_FINGERPRINT;
+         mParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
+-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH |
+-                WindowManager.LayoutParams.FLAG_DIM_BEHIND;
++                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
+         mParams.gravity = Gravity.TOP | Gravity.LEFT;
+ 
+         mPressedParams.copyFrom(mParams);
+@@ -359,8 +358,6 @@ public class FODCircleView extends ImageView implements TunerService.Tunable, Co
+         mParams.setTitle("Fingerprint on display");
+         mPressedParams.setTitle("Fingerprint on display.touched");
+ 
+-        mParams.dimAmount = 0.0f;
+-
+         mPressedView = new ImageView(context)  {
+             @Override
+             protected void onDraw(Canvas canvas) {
+-- 
+2.30.2
+

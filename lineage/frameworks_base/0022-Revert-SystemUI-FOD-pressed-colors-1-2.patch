@@ -1,0 +1,363 @@
+From e6bfd7896ef0bece90e56e8edb70c9db6807b22c Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 19:26:27 +0000
+Subject: [PATCH 22/52] Revert "SystemUI: FOD pressed colors [1/2]"
+
+This reverts commit eaa8f554d9883c3021d99b8c41a29b74b414a102.
+---
+ core/java/android/provider/Settings.java      |   6 -----
+ core/res/res/values/cr_config.xml             |   3 ---
+ core/res/res/values/cr_symbols.xml            |   3 ---
+ .../res/drawable-nodpi/fod_icon_pressed.png   | Bin 0 -> 108 bytes
+ .../res/drawable-nodpi/fod_icon_pressed.webp  | Bin 1040 -> 0 bytes
+ .../drawable-nodpi/fod_icon_pressed_cyan.webp | Bin 2504 -> 0 bytes
+ .../drawable-nodpi/fod_icon_pressed_green.png | Bin 2112 -> 0 bytes
+ .../fod_icon_pressed_yellow.png               | Bin 3790 -> 0 bytes
+ .../systemui/biometrics/FODCircleView.java    |  25 ++++--------------
+ 9 files changed, 5 insertions(+), 32 deletions(-)
+ create mode 100644 packages/SystemUI/res/drawable-nodpi/fod_icon_pressed.png
+ delete mode 100644 packages/SystemUI/res/drawable-nodpi/fod_icon_pressed.webp
+ delete mode 100644 packages/SystemUI/res/drawable-nodpi/fod_icon_pressed_cyan.webp
+ delete mode 100644 packages/SystemUI/res/drawable-nodpi/fod_icon_pressed_green.png
+ delete mode 100644 packages/SystemUI/res/drawable-nodpi/fod_icon_pressed_yellow.png
+
+diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
+index b66c0369374..cca0f81da84 100755
+--- a/core/java/android/provider/Settings.java
++++ b/core/java/android/provider/Settings.java
+@@ -5465,12 +5465,6 @@ public final class Settings {
+          */
+         public static final String FOD_ICON = "fod_icon";
+ 
+-        /**
+-         * FOD pressed color
+-         * @hide
+-         */
+-        public static final String FOD_COLOR = "fod_color";
+-
+         /** @hide */
+         public static final String BACK_GESTURE_HEIGHT = "back_gesture_height";
+ 
+diff --git a/core/res/res/values/cr_config.xml b/core/res/res/values/cr_config.xml
+index 2ae48a08f5e..410f2690e82 100644
+--- a/core/res/res/values/cr_config.xml
++++ b/core/res/res/values/cr_config.xml
+@@ -68,9 +68,6 @@
+     <!-- Whether to show a custom view for FOD -->
+     <bool name="config_needCustomFODView">false</bool>
+ 
+-    <!-- Default fod pressed color -->
+-    <integer name="config_fod_pressed_color">1</integer>
+-
+     <!-- Whether device has physical tri state switch -->
+     <bool name="config_hasAlertSlider">false</bool>
+ 
+diff --git a/core/res/res/values/cr_symbols.xml b/core/res/res/values/cr_symbols.xml
+index f0dda389835..964c5bd35fd 100644
+--- a/core/res/res/values/cr_symbols.xml
++++ b/core/res/res/values/cr_symbols.xml
+@@ -77,9 +77,6 @@
+   <!-- Whether to show a custom view for FOD -->
+   <java-symbol type="bool" name="config_needCustomFODView" />
+ 
+-  <!-- Default fod pressed icon -->
+-  <java-symbol type="integer" name="config_fod_pressed_color" />
+-
+   <!-- App error dialog -->
+   <java-symbol type="id" name="aerr_copy" />
+   <java-symbol type="string" name="url_copy_success" />
+diff --git a/packages/SystemUI/res/drawable-nodpi/fod_icon_pressed.png b/packages/SystemUI/res/drawable-nodpi/fod_icon_pressed.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..4102e28c1300b49323b50625d8cfaa73b006561f
+GIT binary patch
+literal 108
+zcmeAS@N?(olHy`uVBq!ia0vp^j3CUx1|;Q0k8}bl$r9IylHmNblJdl&R0hYC{G?O`
+z&)mfH)S%SFl*+=BsWw1Ge4Z|jAr-fh5*U~o7?>FtSQ!{^cTT<plwt66^>bP0l+XkK
+D@OB!I
+
+literal 0
+HcmV?d00001
+
+diff --git a/packages/SystemUI/res/drawable-nodpi/fod_icon_pressed.webp b/packages/SystemUI/res/drawable-nodpi/fod_icon_pressed.webp
+deleted file mode 100644
+index d82fdf8db0f655288f159c369047a319d3db8790..0000000000000000000000000000000000000000
+GIT binary patch
+literal 0
+HcmV?d00001
+
+literal 1040
+zcmV+r1n>J&Nk&Ep1ONb6MM6+kP&il$0000G0002J006xJ06|PpNLm5_00AGMkZlBL
+z{*?E5oJK?h*C0pQ_PA~SVMo|WPNB8RWx(N}VyW>da0&F;wBZOjo`mK9U+=CW`tQh*
+z+_-63ASe#!B09?#M73srUrDGHb12D<+P+>_M{V}G?e;U6xlA2=HlGFGBRS%XJo+^$
+z@Ou+aUc+%PMpdvyHbiCgUT<>oTCVmxr|$lj*RP#Ltri>9YO!98ii3$XD05S)?M9mq
+zMvnR+F^q~Px2BpLPK(@Vs&X}&_A7AV0C4PAfI_#z7NRE@drDY%Ksff4h_ItXgzXAk
+zSRhtyB_nJrVc`VfYa)hgb;6Ac#;Vl`H_jNT<%L-_I@!kPImX%xwpu_|wHItPgQVIE
+zwwgfvorvO!YbP0b$}xclWkFe$V*(G#jFO&(z%syN<^3}t5ynaMEaNNS7tBr;nAI!b
+z0CSWXCcOg$n!(fS>xUn_(bog~=jyxry~BSmzdgSz_}@iu&+j_^cj?Rjoy`Ake+~a5
+z4)ALs@Zhd){DQ|;;K3T7hY21-c(8^$fgLM&P?88dD93_@9TRv^b_J2WcKG65fdtg6
+zup+%mE7A+LT2=faz2HVyAs9nV;JoTat`lxtHTcDK!i}zh1WefwQcAe6YZ9rK6c)NB
+z5+G$$$SB)FMhO>O2MI`}Qy?mEVb>)FYksSAQ+wV|i5xX8a?&&n8ZIWTB5>+d$djde
+z(DBROtr!*Kkf_8qH7YKmQfyKy#mcZ3F$8tA1UQOhjY}P=yH8Gx>(V{SVqRHwW<1L6
+zeLEwb&Ssuax@9NSy5#&n=Pc;@DcU7gP&gon0RR9H6abw8D!u@|06uLtnMkBED<LEi
+z$g)5UiD_=(aWLZZi~i^c+f4SE?K9eEw9jdt%^;T)FjL+pYh0@1$s!PH07mYO1irB9
+zs&Y=DfI&Gi54S46z#T-T7b)<QX54ekzC3wS{@0opHm{yV+CtPI%jI}+3yPx*FGaJM
+zQ=|Z>ffAI9vHt4>prIO4ow532c+Vo5+}?!p%(aq4@rmv+;}gawj86st0RI0JKmY(G
+z>I>UKoHaFfl9IAHv$c%%!*d7rp+4}=tNGw7KV9L>iVxkT;}&p7oQK`nI_GEals4vZ
+zb&PtUM%bEA#7=-kCcSd7)!;FH(QZQPU+HPAeZ1J)7m41?Wb)ag1R7%U{|M{LB^<-5
+zkvCcp)B~GZ|F$%fsh~v`9m*{3I^y)W(^M2Cv#=DLWhmt_cYwiU3-%{+OkVj!Eu=+^
+zErv3hRu`iLJfRn&yhe}jUJ>qz{}pw-dtC1r->|?=3c{)FDsxVy|G^eZl@{buOK?w^
+K000000002$cIsaM
+
+diff --git a/packages/SystemUI/res/drawable-nodpi/fod_icon_pressed_cyan.webp b/packages/SystemUI/res/drawable-nodpi/fod_icon_pressed_cyan.webp
+deleted file mode 100644
+index bca32da409d88da5e63f7afd12b426a5368e894c..0000000000000000000000000000000000000000
+GIT binary patch
+literal 0
+HcmV?d00001
+
+literal 2504
+zcmV;(2{-mqNk&G%2><|BMM6+kP&il$0000G0002J006xJ06|PpNCyP~00A6=Y@5|z
+z`#D2IWRb>gMC2;l|0vdPE?{tzpdcHRlh3(<%`4biS%q5&h1FQe1}{L^Pzf7O4uYGk
+zti=se3-(%i1H-SI@ISxbS4YGI$W^v&inHeof>wel<==*BtvmwDnXLAfo`fLTYy*N-
+zx;-(QVCx|WUz2^Y%bo~AmdWM>GT)!4j)(~$c{Q`+1#yxW#~0OOulHD892a>K2VTe2
+zK&@)I;ijlxzp)mZp=+s(7-Lgu`8uFwIyGi6q1b+Q^E%)+nQto;=uRYFB^8mQ|8NV1
+zi@jH=_o9&ny*3X=Ea2#HQzg6jb<RT0zZPw6R;vRRbx>W^<c;&h;yyWVv`9NHi|jgS
+z4dS&Si#@Ex#Vhq$^nOXU-Hyk?d!1dm5{(HfIB6t=%HOh*w|R+@%_*xnZ6?LZby?MJ
+zP8O>&W@X0}OOQ;P6>ew5$o5#}URH>*%SyXt5$ZEmdshGdVl9sq_gb<4EOpAtpQfaG
+zd&%lw{*vg^4+e0tCC!&V4B={9l23ma#MPD*Z+|e1i@zjDT{4gh!vhyPWhm!|2Cc<l
+zwhXI#Xn1v_$}@&@RyHW>GN5kOm`sl$?PUzH+6-#jGNZz<R*cAvaT(_fNOl?6ZZf(i
+zL)(ljKgDL6k0^1=;NB*pX)wHvNOmXqOm?H_Fu<J%N*+R9DYST>A@0Y+sxip5kkUhx
+zhUst|hS>?_jf<1}CJcvxc0yQvLh5NXSe2o!2C@fO4eTIA2D=#KD_UOzY|hb|Z~8lA
+zxDS0TjPM#Q_$e^p1wR*vUHH)V7~9kPIj@vE{UXkyK8oN>C{6Y&>2{OPn%|VMmNghR
+ztlb!&#$IV3`!vPd)TflU6o6XtR;qyYO1uTQ%(+0wTnKD3w+RU51hksDS~Fj%H#^*Q
+zJnp=JyCCK+PPj{Q?(%}W;+VVR3+^r|?y5)b9(&yN*n8yevEr_};O^p>yW@hpBIhno
+zxJzR0;()ur<Id}F*D<*>wVJtFgJ4boo6KzjA#)+%GUoyoa~7bMyp<||l(!TBrg)qB
+zG{)Q5C*y{-8{-o))-p8utocngYj%?&I1@?}BF-Z8bvSeS>3fXr>HQEf7U7E{jE#I{
+zVT9Lc!4Dncbx6K9=V;A0{n1ynzEZ#<TE!st0IPu=gsNCoDe&qOQctVF$U(}X5Z|~s
+zxo^TC2PcO@O%G8Tro*8cN;L{O-p8mP4~t43LSBi&?;zBn2zMv=Om?H720jgnG;xd0
+zZ6X@VPqCTiDe5LRO^Q6(MW&mKj&fsM#yK*vf=h*rwA!e&Ei)+7!=#rXQ?o82ZkEg~
+z&+wR)$>h3+hF2%ETWGY%@YpF9r!mtgb&14fip>AD$iw0<$k<wCVYLN0+p8R`wjpb4
+zk%7e)<o&hq^IiUe%)|5Aou(l7P|MTIYsE<V`b@7`og^%~TDfJCG27FrmnA7PZH?L)
+zlGCb;wHa3|5;fP=rJEyZlg+6f(`J$c&fjWrn<tqQjfn=6MuNoN?Re68om~>W)R(Pa
+zBI)C`p<KgSoD@tuu1v0zCMDlEPx3rDZ%EPA>Ohu3b(NI0i(ltb%)b_G(s=W5B*Ex#
+zlhj@)T<poU7mX~C?z$5RSw!UMU{JCB>}JqzGT&A}q%k&?mV;8JQ)31QRV_E%6!mx1
+zVl#9t71U~G#|z>lFODy&$6oKTx;QTKBo4fesp0<%09H^qAd&<C01zbrodGJo0KNb|
+zZ8nxjBqOn*BbW-pFb#=gZr-pB?eX{R|BqX2-MjIF_XDPDmiznE3(Ed^{#)%gfCKmk
+z@sIIeX*?i5T{?hz0DoEjz3Q{-0q6nyGwPfEllE)iNA{=o```ohBmW0j2dD?|4_Eoj
+z1syjU$wQiq!>3FIpg#?iD}&0ny4f&mdZJH?XAUumZoI!gk#N^>p1$p>JzX*uNugQ+
+zpMTLynMf_NXFVG?vADAhxv-YPrBz++Hux!dv0v^fIBZwaZZ~OU*{n3BAl82xObrTI
+zL`-f%Lv20=f*=r&wfj(-Q#$6zt!%;nC#TNqhkx8PL<G9^m$wB@+T0xBD*}i|Y9_Y0
+z6g^_1>N{e6J|Kj-o%&LE6?B4H%&H|@)yQHby-L6l7tjFy@C{&|XqX4+zIm|xKO#Hx
+z@pJIOC!1|p2LA@JKB*7R<)Qm=h&9IuG8xMpnv8@vqpu!WTCp7Iw4%xrcJAtHMQWM+
+z%YZ)F>&zBvi%Bs5_3;g~l^zolRtW7&A&?G)Q7wxi{z%<dmPBalFa3b6wVBxFBNSqU
+zk;jUp{ojo(B9w!asXo&p(5Byi=L}WX^nPqxW-zMRd7R2T$0*MEBbYz3$Y`!C&zG%z
+zKmtWy<pSrmU)9?`gAs-KcB7i)%uT&yypIXrv>U(Nelf@!MJYU93#ZG=qTh|)3MA%s
+z-e*Ut=Zd*|?c6z<7esmaTh3slp_*gr_^-=B-a#`US0UF#2U=EU@_=cH+F?Q}6so3A
+zdl)9#_^T23<V`Oaz(jlgZu@|zNQt#CapWR->e=Zq^MtnWsiY-k=$v+i3k2F{o6y(B
+z$n#GRCdyde>2C5->GXNvxsoNj6{x*Cp2BLUJx4LA;sDHsXn4-pXbO>`!^al0&kMkL
+z49;F~dnT|QAOHbAPxsrk35v%di2{`dPhqEs6i+xgo7_*YaMtiB^e30w%R^J(@K&_S
+z1Od%L!ip>1opX8o8k%LIz`!gSOjbtQnLzQ6K%HypAV@eck=5SN?85)<4E>{Nw4n^n
+z5D;>{6Z)!ER8@Bh9=nnVv&vLoc!yrYw*)u2s*BKJdCdl@7{~jIS7!{zUE(X;fvN(w
+z>9J-iax5{l&D9G0Ar1n|mY=EjOXq<(89K7=<i~=Q4qn5yJnKx9v%Fmn=dlSENs=dL
+zg@^f;xc&Wrds87;{6*!pH|X9;AdJrV5Nxg&Q%sgyI@*YJ<C#*Mmosz^j6-38uI@cE
+z4k1#lEvw%hE<X;RLeRmiwHD(XJgCakW*YL9=_q`HHy7W|aIbEik;<qz&faI!#$kkQ
+zlgOLJxjJ$GJj}*uk=921((}nzZFmLCClMs`sYGb`m1W)ehG&wO+Q+oD8!3o2)4G5j
+z2(Y1D__Y!NIC*~Z+uQ5MmKRK>J>P!HOPOCSWUc=?H2zFd-5If;Q1+(?6$_73i#+Y2
+zn{8j&{mMUWHSb|w9;?R|M{sYIuBpr*6xqNA3}mis;M9N=!@s7J)Lig%@7=lLRX~~E
+Skg4r5^Tx=?##<N-0001ltKF#p
+
+diff --git a/packages/SystemUI/res/drawable-nodpi/fod_icon_pressed_green.png b/packages/SystemUI/res/drawable-nodpi/fod_icon_pressed_green.png
+deleted file mode 100644
+index 7976ed6be2e018ddf4ae28c6a119feaeb104a661..0000000000000000000000000000000000000000
+GIT binary patch
+literal 0
+HcmV?d00001
+
+literal 2112
+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
+KvrV;?f5Jc1SLdAo
+
+diff --git a/packages/SystemUI/res/drawable-nodpi/fod_icon_pressed_yellow.png b/packages/SystemUI/res/drawable-nodpi/fod_icon_pressed_yellow.png
+deleted file mode 100644
+index 36c47444db4f0a4791ad9bba5bdb0dc7db811035..0000000000000000000000000000000000000000
+GIT binary patch
+literal 0
+HcmV?d00001
+
+literal 3790
+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
+J{(@WFe*ktoKrR3P
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index b6452783ecc..ce4b9ca2789 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -141,15 +141,6 @@ public class FODCircleView extends ImageView implements TunerService.Tunable {
+         R.drawable.fod_icon_transparent
+     };
+ 
+-    private int mDefaultPressedColor;
+-    private int mPressedColor;
+-    private final int[] PRESSED_COLOR = {
+-        R.drawable.fod_icon_pressed,
+-        R.drawable.fod_icon_pressed_cyan,
+-        R.drawable.fod_icon_pressed_green,
+-        R.drawable.fod_icon_pressed_yellow
+-    };
+-
+     private IFingerprintInscreenCallback mFingerprintInscreenCallback =
+             new IFingerprintInscreenCallback.Stub() {
+         @Override
+@@ -303,8 +294,6 @@ public class FODCircleView extends ImageView implements TunerService.Tunable {
+         Resources res = context.getResources();
+ 
+         mColorBackground = res.getColor(R.color.config_fodColorBackground);
+-        mDefaultPressedColor = res.getInteger(com.android.internal.R.
+-             integer.config_fod_pressed_color);
+         mPaintFingerprintBackground.setColor(mColorBackground);
+         mPaintFingerprintBackground.setAntiAlias(true);
+ 
+@@ -342,11 +331,12 @@ public class FODCircleView extends ImageView implements TunerService.Tunable {
+             @Override
+             protected void onDraw(Canvas canvas) {
+                 if (mIsCircleShowing) {
+-                    setImageResource(PRESSED_COLOR[mPressedColor]);
++                    canvas.drawCircle(mSize / 2, mSize / 2, mSize / 2.0f, mPaintFingerprintBackground);
+                 }
+                 super.onDraw(canvas);
+             }
+         };
++        mPressedView.setImageResource(R.drawable.fod_icon_pressed);
+ 
+         mWindowManager.addView(this, mParams);
+ 
+@@ -390,16 +380,13 @@ public class FODCircleView extends ImageView implements TunerService.Tunable {
+             resolver.registerContentObserver(Settings.System.getUriFor(
+                     Settings.System.FOD_ICON),
+                     false, this, UserHandle.USER_ALL);
+-            resolver.registerContentObserver(Settings.System.getUriFor(
+-                    Settings.System.FOD_COLOR),
+-                    false, this, UserHandle.USER_ALL);
+         }
+ 
+         @Override
+         public void onChange(boolean selfChange, Uri uri) {
+-            if (uri.equals(Settings.System.getUriFor(Settings.System.FOD_ANIM)) ||
+-                    uri.equals(Settings.System.getUriFor(Settings.System.FOD_ICON)) ||
+-                    uri.equals(Settings.System.getUriFor(Settings.System.FOD_COLOR))) {
++            if (uri.equals(Settings.System.getUriFor(
++                    Settings.System.FOD_ANIM)) || uri.equals(Settings.System.getUriFor(
++                Settings.System.FOD_ICON))) {
+                 updateStyle();
+             }
+         }
+@@ -601,8 +588,6 @@ public class FODCircleView extends ImageView implements TunerService.Tunable {
+                 Settings.System.FOD_RECOGNIZING_ANIMATION, 0) != 0;
+         mSelectedIcon = Settings.System.getInt(mContext.getContentResolver(),
+                 Settings.System.FOD_ICON, 0);
+-        mPressedColor = Settings.System.getInt(mContext.getContentResolver(),
+-                Settings.System.FOD_COLOR, mDefaultPressedColor);
+ 
+         if (mFODAnimation != null) {
+             mFODAnimation.update(mIsRecognizingAnimEnabled);
+-- 
+2.30.2
+

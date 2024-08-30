@@ -1,0 +1,29 @@
+From 761e10db1740b97d5613c23b39e1c59f84dd66af Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Thu, 17 Dec 2020 13:49:34 -0500
+Subject: [PATCH 046/115] Support UnifiedNlp (microG)
+
+  from
+  https://github.com/syberia-project/platform_frameworks_base/commit/6ce5ffc2279d0fa5a615e75711b716361cdad644
+---
+ core/res/res/values/config.xml | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/core/res/res/values/config.xml b/core/res/res/values/config.xml
+index 230df67aa97..56f17baaf98 100644
+--- a/core/res/res/values/config.xml
++++ b/core/res/res/values/config.xml
+@@ -1661,6 +1661,10 @@
+     <string-array name="config_locationProviderPackageNames" translatable="false">
+         <!-- The standard AOSP fused location provider -->
+         <item>com.android.location.fused</item>
++        <!-- Google Play Services or microG (free reimplementation) location provider -->
++        <item>com.google.android.gms</item>
++        <!-- microG unifiednlp location provider (standalone) -->
++        <item>org.microg.nlp</item>
+     </string-array>
+ 
+     <!-- This string array can be overriden to enable test location providers initially. -->
+-- 
+2.25.1
+

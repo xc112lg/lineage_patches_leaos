@@ -1,0 +1,162 @@
+From 7e147cae03e2d22d2306bb565d51049f72786ae8 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 19:28:34 +0000
+Subject: [PATCH 35/52] Revert "SystemUI: Recognizing FP animation effects
+ [1/2]"
+
+This reverts commit f8ac4f6be2e7e2438a021e553c7f3052399801ef.
+---
+ core/java/android/provider/Settings.java      |  6 ---
+ .../fod_pulse_recognizing_white_anim.xml      | 43 ++++++++++++++++
+ .../systemui/biometrics/FODCircleView.java    | 50 +------------------
+ 3 files changed, 45 insertions(+), 54 deletions(-)
+ create mode 100644 packages/SystemUI/res/drawable/fod_pulse_recognizing_white_anim.xml
+
+diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
+index 3c4f0df1512..9c06d3085d4 100755
+--- a/core/java/android/provider/Settings.java
++++ b/core/java/android/provider/Settings.java
+@@ -5397,12 +5397,6 @@ public final class Settings {
+          */
+         public static final String FOD_RECOGNIZING_ANIMATION = "fod_recognizing_animation";
+ 
+-        /**
+-         * FOD recognizing animation picker
+-         * @hide
+-         */
+-        public static final String FOD_ANIM = "fod_anim";
+-
+         /**
+          * Whether allowing pocket service to register sensors and dispatch informations.
+          *   0 = disabled
+diff --git a/packages/SystemUI/res/drawable/fod_pulse_recognizing_white_anim.xml b/packages/SystemUI/res/drawable/fod_pulse_recognizing_white_anim.xml
+new file mode 100644
+index 00000000000..ea98ebcd6f7
+--- /dev/null
++++ b/packages/SystemUI/res/drawable/fod_pulse_recognizing_white_anim.xml
+@@ -0,0 +1,43 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!-- Copyright (C) 2019 Extended-UI
++
++     Licensed under the Apache License, Version 2.0 (the "License");
++     you may not use this file except in compliance with the License.
++     You may obtain a copy of the License at
++
++          http://www.apache.org/licenses/LICENSE-2.0
++
++     Unless required by applicable law or agreed to in writing, software
++     distributed under the License is distributed on an "AS IS" BASIS,
++     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++     See the License for the specific language governing permissions and
++     limitations under the License.
++-->
++<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
++    android:oneshot="false">
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_1" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_2" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_3" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_4" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_5" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_6" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_7" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_8" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_9" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_10" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_11" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_12" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_13" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_14" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_15" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_16" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_17" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_18" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_19" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_20" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_21" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_22" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_23" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_24" android:duration="12" />
++    <item android:drawable="@drawable/gxzw_pulse_recognizing_anim_white_25" android:duration="12" />
++</animation-list>
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index 7673316e606..8d133e83f53 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -385,10 +385,6 @@ public class FODCircleView extends ImageView {
+         mIsCircleShowing = false;
+ 
+         setImageResource(R.drawable.fod_icon_default);
+-        if (mFODAnimation != null) {
+-            mFODAnimation.setFODAnim();
+-        }
+-
+         invalidate();
+ 
+         dispatchRelease();
+@@ -580,7 +576,7 @@ class FODAnimation extends ImageView {
+     private WindowManager mWindowManager;
+     private boolean mShowing = false;
+     private boolean mIsKeyguard;
+-    private AnimationDrawable recognizingAnim;
++    private final AnimationDrawable recognizingAnim;
+     private final WindowManager.LayoutParams mAnimParams = new WindowManager.LayoutParams();
+ 
+     public FODAnimation(Context context, int mPositionX, int mPositionY) {
+@@ -603,53 +599,11 @@ class FODAnimation extends ImageView {
+         mAnimParams.y = mAnimationPositionY;
+ 
+         this.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+-        setFODAnim();
++        this.setBackgroundResource(R.drawable.fod_pulse_recognizing_white_anim);
+         recognizingAnim = (AnimationDrawable) this.getBackground();
+ 
+     }
+ 
+-    public int getFODAnim() {
+-        return Settings.System.getInt(mContext.getContentResolver(),
+-                Settings.System.FOD_ANIM, 0);
+-    }
+-
+-    public void setFODAnim() {
+-        int fodanim = getFODAnim();
+-
+-        if (fodanim == 0) {
+-            this.setBackgroundResource(R.drawable.fod_miui_normal_recognizing_anim);
+-        } else if (fodanim == 1) {
+-            this.setBackgroundResource(R.drawable.fod_miui_aod_recognizing_anim);
+-        } else if (fodanim == 2) {
+-            this.setBackgroundResource(R.drawable.fod_miui_light_recognizing_anim);
+-        } else if (fodanim == 3) {
+-            this.setBackgroundResource(R.drawable.fod_miui_pop_recognizing_anim);
+-        } else if (fodanim == 4) {
+-            this.setBackgroundResource(R.drawable.fod_miui_pulse_recognizing_anim);
+-        } else if (fodanim == 5) {
+-            this.setBackgroundResource(R.drawable.fod_miui_pulse_recognizing_white_anim);
+-        } else if (fodanim == 6) {
+-            this.setBackgroundResource(R.drawable.fod_miui_rhythm_recognizing_anim);
+-        } else if (fodanim == 7) {
+-            this.setBackgroundResource(R.drawable.fod_op_cosmos_recognizing_anim);
+-        } else if (fodanim == 8) {
+-            this.setBackgroundResource(R.drawable.fod_op_mclaren_recognizing_anim);
+-        } else if (fodanim == 9) {
+-            this.setBackgroundResource(R.drawable.fod_op_stripe_recognizing_anim);
+-        } else if (fodanim == 10) {
+-            this.setBackgroundResource(R.drawable.fod_op_wave_recognizing_anim);
+-        } else if (fodanim == 11) {
+-            this.setBackgroundResource(R.drawable.fod_pureview_dna_recognizing_anim);
+-        } else if (fodanim == 12) {
+-            this.setBackgroundResource(R.drawable.fod_pureview_future_recognizing_anim);
+-        } else if (fodanim == 13) {
+-            this.setBackgroundResource(R.drawable.fod_pureview_halo_ring_recognizing_anim);
+-        } else if (fodanim == 14) {
+-            this.setBackgroundResource(R.drawable.fod_pureview_molecular_recognizing_anim);
+-        }
+-        recognizingAnim = (AnimationDrawable) this.getBackground();
+-    }
+-
+     public void updateParams(int mDreamingOffsetY) {
+         mAnimationPositionY = (int) Math.round(mDreamingOffsetY - (mContext.getResources().getDimensionPixelSize(R.dimen.fod_animation_size) / 2));
+         mAnimParams.y = mAnimationPositionY;
+-- 
+2.30.2
+

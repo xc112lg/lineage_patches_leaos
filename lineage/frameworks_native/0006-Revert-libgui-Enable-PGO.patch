@@ -1,0 +1,29 @@
+From ee17a0e630b07b5c32bc7f31c5e9c4cd35c14b77 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Thu, 13 May 2021 07:27:43 -0400
+Subject: [PATCH] Revert "libgui: Enable PGO"
+
+This reverts commit 82dde7f54ff566ae6c23f69adf9d7429ae74a3e4.
+---
+ libs/gui/Android.bp | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/libs/gui/Android.bp b/libs/gui/Android.bp
+index fb0e7ce22..1be964247 100644
+--- a/libs/gui/Android.bp
++++ b/libs/gui/Android.bp
+@@ -125,11 +125,6 @@ cc_defaults {
+     lto: {
+         thin: true,
+     },
+-
+-    pgo: {
+-        sampling: true,
+-        profile_file: "libgui/libgui.profdata",
+-    },
+ }
+ 
+ // Used by media codec services exclusively as a static lib for
+-- 
+2.17.1
+

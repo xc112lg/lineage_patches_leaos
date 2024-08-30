@@ -1,0 +1,26 @@
+From 18ba88b5d467cdca91ee49dffef711f05813883b Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 19:34:01 +0000
+Subject: [PATCH 40/52] Revert "CarSystemUI: Exclude FODCircleViewImpl from UI
+ components"
+
+This reverts commit f43431ed138d0fa9c6cb1ceacf06ae37d4964f6c.
+---
+ packages/CarSystemUI/res/values/config.xml | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/packages/CarSystemUI/res/values/config.xml b/packages/CarSystemUI/res/values/config.xml
+index b011c8fd172..24157f9e203 100644
+--- a/packages/CarSystemUI/res/values/config.xml
++++ b/packages/CarSystemUI/res/values/config.xml
+@@ -138,7 +138,6 @@
+         <item>com.android.systemui.shortcut.ShortcutKeyDispatcher</item>
+         <item>com.android.systemui.LatencyTester</item>
+         <item>com.android.systemui.globalactions.GlobalActionsComponent</item>
+-        <item>com.android.systemui.biometrics.FODCircleViewImpl</item>
+         <item>com.android.systemui.SliceBroadcastRelayHandler</item>
+         <item>com.android.systemui.statusbar.notification.InstantAppNotifier</item>
+         <item>com.android.systemui.accessibility.WindowMagnification</item>
+-- 
+2.30.2
+

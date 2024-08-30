@@ -1,0 +1,500 @@
+From 5af48f1e68399017d54b0d816a5e6c4f2975d7bc Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Mon, 31 Jan 2022 18:04:41 +0000
+Subject: [PATCH 101/115] Revert "SystemUI: Redesign Media Player View"
+
+This reverts commit 99b8044c0fcd7154c1de78d17a550ee1091ef769.
+---
+ packages/SystemUI/res/layout/media_view.xml   |  12 ++
+ packages/SystemUI/res/values/dimens.xml       |   6 +-
+ packages/SystemUI/res/xml/media_collapsed.xml | 117 +++++++++---------
+ packages/SystemUI/res/xml/media_expanded.xml  |  68 +++++-----
+ .../systemui/media/MediaControlPanel.java     |   4 +
+ .../systemui/media/PlayerViewHolder.kt        |   2 +
+ .../statusbar/notification/row/DungeonRow.kt  |   4 +
+ 7 files changed, 124 insertions(+), 89 deletions(-)
+
+diff --git a/packages/SystemUI/res/layout/media_view.xml b/packages/SystemUI/res/layout/media_view.xml
+index 437e64eef75..a5307c482dd 100644
+--- a/packages/SystemUI/res/layout/media_view.xml
++++ b/packages/SystemUI/res/layout/media_view.xml
+@@ -172,6 +172,18 @@
+         android:progressBackgroundTint="@color/media_disabled"
+         android:splitTrack="false" />
+ 
++    <!-- App name -->
++    <TextView
++        android:id="@+id/app_name"
++        android:textAppearance="@*android:style/TextAppearance.DeviceDefault.Notification.Info"
++        android:textColor="@color/media_primary_text"
++        android:layout_width="0dp"
++        android:layout_height="wrap_content"
++        android:singleLine="true"
++        android:fontFamily="@*android:string/config_headlineFontFamily"
++        android:textDirection="locale"
++        android:textSize="14sp" />
++
+     <!-- Song name -->
+     <TextView
+         android:id="@+id/header_title"
+diff --git a/packages/SystemUI/res/values/dimens.xml b/packages/SystemUI/res/values/dimens.xml
+index 42522bc08bf..eb09ec70047 100644
+--- a/packages/SystemUI/res/values/dimens.xml
++++ b/packages/SystemUI/res/values/dimens.xml
+@@ -1293,9 +1293,9 @@
+     <!-- Size of media cards in the QSPanel carousel -->
+     <dimen name="qs_media_width">350dp</dimen>
+     <dimen name="qs_media_padding">16dp</dimen>
+-    <dimen name="qs_media_panel_outer_padding">12dp</dimen>
+-    <dimen name="qs_media_album_size">120dp</dimen>
+-    <dimen name="qs_media_icon_size">14dp</dimen>
++    <dimen name="qs_media_panel_outer_padding">16dp</dimen>
++    <dimen name="qs_media_album_size">52dp</dimen>
++    <dimen name="qs_media_icon_size">16dp</dimen>
+     <dimen name="qs_center_guideline_padding">10dp</dimen>
+     <dimen name="qs_seamless_icon_size">@dimen/qs_media_icon_size</dimen>
+     <dimen name="qs_seamless_fallback_icon_size">@dimen/qs_seamless_icon_size</dimen>
+diff --git a/packages/SystemUI/res/xml/media_collapsed.xml b/packages/SystemUI/res/xml/media_collapsed.xml
+index 9bfc7e5bf50..ee958f28c51 100644
+--- a/packages/SystemUI/res/xml/media_collapsed.xml
++++ b/packages/SystemUI/res/xml/media_collapsed.xml
+@@ -17,46 +17,42 @@
+ <ConstraintSet
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     xmlns:app="http://schemas.android.com/apk/res-auto">
+-
+-    <Constraint
+-        android:id="@+id/album_art"
+-        android:layout_width="@dimen/qs_media_album_size"
+-        android:layout_height="@dimen/qs_media_album_size"
+-        android:layout_marginTop="@dimen/qs_media_panel_outer_padding"
+-        android:layout_marginBottom="@dimen/qs_media_panel_outer_padding"
+-        android:layout_marginStart="@dimen/qs_media_panel_outer_padding"
+-        app:layout_constraintEnd_toStartOf="@id/media_action_barrier"
+-        app:layout_constraintHorizontal_bias="0.0"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent"
+-        />
+-
+     <Constraint
+         android:id="@+id/icon"
+         android:layout_width="@dimen/qs_media_icon_size"
+         android:layout_height="@dimen/qs_media_icon_size"
+-        android:layout_marginTop="@dimen/qs_media_panel_outer_padding"
+         android:layout_marginStart="18dp"
+-        app:layout_constraintStart_toEndOf="@id/album_art"
++        app:layout_constraintTop_toTopOf="@id/app_name"
++        app:layout_constraintBottom_toBottomOf="@id/app_name"
++        app:layout_constraintStart_toStartOf="parent"
++        />
++
++    <Constraint
++        android:id="@+id/app_name"
++        android:layout_width="0dp"
++        android:layout_height="wrap_content"
++        android:layout_marginEnd="@dimen/qs_center_guideline_padding"
++        android:layout_marginStart="10dp"
++        android:layout_marginTop="20dp"
+         app:layout_constraintTop_toTopOf="parent"
++        app:layout_constraintStart_toEndOf="@id/icon"
++        app:layout_constraintEnd_toStartOf="@id/center_vertical_guideline"
++        app:layout_constraintHorizontal_bias="0"
+         />
+ 
+     <Constraint
+         android:id="@+id/media_seamless"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        android:layout_gravity="center_vertical"
+-        android:layout_marginTop="6dp"
+-        android:layout_marginStart="@dimen/qs_center_guideline_padding"
+-        android:layout_marginEnd="@dimen/qs_center_guideline_padding"
+-        app:layout_constrainedWidth="true"
+         app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintHeight_min="16dp"
+-        app:layout_constraintHorizontal_bias="1"
+-        app:layout_constraintHorizontal_chainStyle="spread_inside"
+-        app:layout_constraintStart_toEndOf="@id/icon"
+         app:layout_constraintTop_toTopOf="parent"
+-        app:layout_constraintWidth_min="16dp"
++        app:layout_constrainedWidth="true"
++        app:layout_constraintWidth_min="60dp"
++        app:layout_constraintStart_toEndOf="@id/center_vertical_guideline"
++        app:layout_constraintHorizontal_bias="1"
++        android:layout_marginTop="@dimen/qs_media_panel_outer_padding"
++        android:layout_marginEnd="@dimen/qs_media_panel_outer_padding"
++        android:layout_marginStart="@dimen/qs_center_guideline_padding"
+         />
+ 
+     <Constraint
+@@ -65,27 +61,39 @@
+         android:layout_height="@dimen/qs_seamless_fallback_icon_size"
+         android:layout_marginEnd="@dimen/qs_seamless_fallback_end_margin"
+         android:layout_marginStart="@dimen/qs_center_guideline_padding"
+-        app:layout_constraintBottom_toBottomOf="@id/icon"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintHorizontal_bias="1"
+         android:alpha="0.5"
+         android:visibility="gone"
+-        app:layout_constraintTop_toTopOf="@id/icon"
++        app:layout_constraintHorizontal_bias="1"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintTop_toTopOf="@id/app_name"
++        app:layout_constraintBottom_toBottomOf="@id/app_name"
+         app:layout_constraintStart_toEndOf="@id/center_vertical_guideline"
+         />
+ 
++    <Constraint
++        android:id="@+id/album_art"
++        android:layout_width="@dimen/qs_media_album_size"
++        android:layout_height="@dimen/qs_media_album_size"
++        android:layout_marginTop="16dp"
++        android:layout_marginStart="@dimen/qs_media_panel_outer_padding"
++        android:layout_marginBottom="24dp"
++        app:layout_constraintTop_toBottomOf="@id/icon"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintBottom_toBottomOf="parent"
++        />
++
+     <!-- Song name -->
+     <Constraint
+         android:id="@+id/header_title"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        android:layout_marginTop="@dimen/qqs_media_spacing"
+-        android:layout_marginStart="@dimen/qqs_media_spacing"
++        android:layout_marginTop="17dp"
++        android:layout_marginStart="16dp"
+         app:layout_constrainedWidth="true"
+-        app:layout_constraintTop_toBottomOf="@id/icon"
++        app:layout_constraintTop_toBottomOf="@id/app_name"
+         app:layout_constraintBottom_toTopOf="@id/header_artist"
+         app:layout_constraintStart_toEndOf="@id/album_art"
+-        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintEnd_toStartOf="@id/media_action_barrier"
+         app:layout_constraintHorizontal_bias="0"/>
+ 
+     <!-- Artist name -->
+@@ -94,14 +102,13 @@
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="3dp"
+-        android:layout_marginBottom="@dimen/qqs_media_spacing"
+-        android:layout_marginEnd="@dimen/qs_media_panel_outer_padding"
++        android:layout_marginBottom="24dp"
+         app:layout_constrainedWidth="true"
+-        app:layout_constraintHorizontal_bias="0"
+-        app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintTop_toBottomOf="@id/header_title"
+         app:layout_constraintStart_toStartOf="@id/header_title"
+-        />
++        app:layout_constraintEnd_toStartOf="@id/media_action_barrier"
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintHorizontal_bias="0"/>
+ 
+     <!-- Seek Bar -->
+     <Constraint
+@@ -133,15 +140,15 @@
+         android:id="@+id/action0"
+         android:layout_width="48dp"
+         android:layout_height="48dp"
+-        android:layout_marginStart="@dimen/qqs_media_spacing"
+-        android:layout_marginBottom="@dimen/qs_media_panel_outer_padding"
++        android:layout_marginStart="4dp"
+         android:layout_marginEnd="4dp"
++        android:layout_marginTop="18dp"
+         android:visibility="gone"
+         app:layout_constraintHorizontal_chainStyle="packed"
++        app:layout_constraintTop_toBottomOf="@id/app_name"
+         app:layout_constraintLeft_toLeftOf="parent"
+         app:layout_constraintRight_toLeftOf="@id/action1"
+-        app:layout_constraintHorizontal_bias="0"
+-        app:layout_constraintTop_toBottomOf="@id/header_artist"
++        app:layout_constraintHorizontal_bias="1"
+         >
+     </Constraint>
+ 
+@@ -151,11 +158,10 @@
+         android:layout_height="48dp"
+         android:layout_marginStart="4dp"
+         android:layout_marginEnd="4dp"
+-        android:layout_marginBottom="@dimen/qs_media_panel_outer_padding"
+-        app:layout_constraintBottom_toBottomOf="parent"
++        android:layout_marginTop="18dp"
++        app:layout_constraintTop_toBottomOf="@id/app_name"
+         app:layout_constraintLeft_toRightOf="@id/action0"
+         app:layout_constraintRight_toLeftOf="@id/action2"
+-        app:layout_constraintTop_toBottomOf="@id/header_artist"
+         >
+     </Constraint>
+ 
+@@ -165,11 +171,10 @@
+         android:layout_height="48dp"
+         android:layout_marginStart="4dp"
+         android:layout_marginEnd="4dp"
+-        android:layout_marginBottom="@dimen/qs_media_panel_outer_padding"
+-        app:layout_constraintBottom_toBottomOf="parent"
++        android:layout_marginTop="18dp"
++        app:layout_constraintTop_toBottomOf="@id/app_name"
+         app:layout_constraintLeft_toRightOf="@id/action1"
+         app:layout_constraintRight_toLeftOf="@id/action3"
+-        app:layout_constraintTop_toBottomOf="@id/header_artist"
+         >
+     </Constraint>
+ 
+@@ -177,11 +182,10 @@
+         android:id="@+id/action3"
+         android:layout_width="48dp"
+         android:layout_height="48dp"
+-        android:layout_marginBottom="@dimen/qs_media_panel_outer_padding"
+         android:layout_marginStart="4dp"
+         android:layout_marginEnd="4dp"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintTop_toBottomOf="@id/header_artist"
++        android:layout_marginTop="18dp"
++        app:layout_constraintTop_toBottomOf="@id/app_name"
+         app:layout_constraintLeft_toRightOf="@id/action2"
+         app:layout_constraintRight_toLeftOf="@id/action4"
+         >
+@@ -191,14 +195,13 @@
+         android:id="@+id/action4"
+         android:layout_width="48dp"
+         android:layout_height="48dp"
+-        android:visibility="gone"
+-        android:layout_marginBottom="@dimen/qs_media_panel_outer_padding"
+-        android:layout_marginEnd="@dimen/qs_media_panel_outer_padding"
+         android:layout_marginStart="4dp"
++        android:layout_marginEnd="4dp"
++        android:visibility="gone"
++        android:layout_marginTop="18dp"
+         app:layout_constraintHorizontal_chainStyle="packed"
+-        app:layout_constraintTop_toBottomOf="@id/header_artist"
++        app:layout_constraintTop_toBottomOf="@id/app_name"
+         app:layout_constraintLeft_toRightOf="@id/action3"
+-        app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintRight_toRightOf="parent"
+         app:layout_constraintHorizontal_bias="0"
+         >
+diff --git a/packages/SystemUI/res/xml/media_expanded.xml b/packages/SystemUI/res/xml/media_expanded.xml
+index 99d423e80c0..d5a02c2d39d 100644
+--- a/packages/SystemUI/res/xml/media_expanded.xml
++++ b/packages/SystemUI/res/xml/media_expanded.xml
+@@ -22,28 +22,39 @@
+         android:layout_width="@dimen/qs_media_icon_size"
+         android:layout_height="@dimen/qs_media_icon_size"
+         android:layout_marginStart="18dp"
+-        android:layout_marginTop="@dimen/qs_media_panel_outer_padding"
++        app:layout_constraintTop_toTopOf="@id/app_name"
++        app:layout_constraintBottom_toBottomOf="@id/app_name"
++        app:layout_constraintStart_toStartOf="parent"
++        />
++
++    <Constraint
++        android:id="@+id/app_name"
++        android:layout_width="0dp"
++        android:layout_height="wrap_content"
++        android:layout_marginEnd="@dimen/qs_center_guideline_padding"
++        android:layout_marginStart="10dp"
++        android:layout_marginTop="20dp"
+         app:layout_constraintTop_toTopOf="parent"
+-        app:layout_constraintStart_toEndOf="@id/album_art"
++        app:layout_constraintStart_toEndOf="@id/icon"
++        app:layout_constraintEnd_toStartOf="@id/center_vertical_guideline"
++        app:layout_constraintHorizontal_bias="0"
+         />
+ 
+     <Constraint
+         android:id="@+id/media_seamless"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+-        android:layout_marginTop="6dp"
+-        app:layout_constraintStart_toEndOf="@id/icon"
+-        app:layout_constraintHorizontal_bias="1"
+-        android:layout_marginStart="@dimen/qs_center_guideline_padding"
+-        android:layout_marginEnd="@dimen/qs_center_guideline_padding"
+-        app:layout_constrainedWidth="true"
+         app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintHeight_min="16dp"
+-        app:layout_constraintHorizontal_chainStyle="spread_inside"
+         app:layout_constraintTop_toTopOf="parent"
+-        app:layout_constraintWidth_min="16dp"
++        app:layout_constraintStart_toEndOf="@id/center_vertical_guideline"
++        app:layout_constraintHorizontal_bias="1"
++        app:layout_constrainedWidth="true"
++        app:layout_constraintWidth_min="60dp"
++        android:layout_marginTop="@dimen/qs_media_panel_outer_padding"
++        android:layout_marginEnd="@dimen/qs_media_panel_outer_padding"
++        android:layout_marginStart="@dimen/qs_center_guideline_padding"
+         />
+-  
++
+     <Constraint
+         android:id="@+id/media_seamless_fallback"
+         android:layout_width="@dimen/qs_seamless_fallback_icon_size"
+@@ -52,8 +63,8 @@
+         android:layout_marginStart="@dimen/qs_center_guideline_padding"
+         android:alpha="0.5"
+         android:visibility="gone"
+-        app:layout_constraintTop_toTopOf="@id/icon"
+-        app:layout_constraintBottom_toBottomOf="@id/icon"
++        app:layout_constraintTop_toTopOf="@id/app_name"
++        app:layout_constraintBottom_toBottomOf="@id/app_name"
+         app:layout_constraintStart_toEndOf="@id/center_vertical_guideline"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="1"
+@@ -63,11 +74,10 @@
+         android:id="@+id/album_art"
+         android:layout_width="@dimen/qs_media_album_size"
+         android:layout_height="@dimen/qs_media_album_size"
+-        android:layout_marginTop="@dimen/qs_media_panel_outer_padding"
++        android:layout_marginTop="14dp"
+         android:layout_marginStart="@dimen/qs_media_panel_outer_padding"
+-        android:layout_marginBottom="@dimen/qqs_media_spacing"
++        app:layout_constraintTop_toBottomOf="@+id/app_name"
+         app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent"
+         />
+ 
+     <!-- Song name -->
+@@ -76,10 +86,10 @@
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginEnd="@dimen/qs_media_panel_outer_padding"
+-        android:layout_marginTop="@dimen/qqs_media_spacing"
+-        android:layout_marginStart="@dimen/qqs_media_spacing"
++        android:layout_marginTop="17dp"
++        android:layout_marginStart="16dp"
+         app:layout_constrainedWidth="true"
+-        app:layout_constraintTop_toBottomOf="@+id/icon"
++        app:layout_constraintTop_toBottomOf="@+id/app_name"
+         app:layout_constraintStart_toEndOf="@id/album_art"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="0"/>
+@@ -102,7 +112,7 @@
+         android:id="@+id/media_progress_bar"
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+-        android:layout_marginTop="35dp"
++        android:layout_marginTop="3dp"
+         app:layout_constraintTop_toBottomOf="@id/header_artist"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+@@ -112,7 +122,7 @@
+         android:id="@+id/notification_media_progress_time"
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+-        android:layout_marginTop="70dp"
++        android:layout_marginTop="38dp"
+         android:layout_marginEnd="@dimen/qs_media_panel_outer_padding"
+         android:layout_marginStart="@dimen/qs_media_panel_outer_padding"
+         app:layout_constraintTop_toBottomOf="@id/header_artist"
+@@ -125,12 +135,13 @@
+         android:layout_width="48dp"
+         android:layout_height="48dp"
+         android:layout_marginTop="5dp"
+-        android:layout_marginStart="@dimen/qs_media_panel_outer_padding"
++        android:layout_marginStart="4dp"
++        android:layout_marginEnd="4dp"
+         android:layout_marginBottom="@dimen/qs_media_panel_outer_padding"
+         app:layout_constraintHorizontal_chainStyle="packed"
+         app:layout_constraintLeft_toLeftOf="parent"
+         app:layout_constraintRight_toLeftOf="@id/action1"
+-        app:layout_constraintTop_toBottomOf="@id/media_progress_bar"
++        app:layout_constraintTop_toBottomOf="@id/notification_media_progress_time"
+         app:layout_constraintBottom_toBottomOf="parent">
+     </Constraint>
+ 
+@@ -143,7 +154,6 @@
+         android:layout_marginBottom="@dimen/qs_media_panel_outer_padding"
+         app:layout_constraintLeft_toRightOf="@id/action0"
+         app:layout_constraintRight_toLeftOf="@id/action2"
+-        app:layout_constraintTop_toBottomOf="@id/media_progress_bar"
+         app:layout_constraintTop_toTopOf="@id/action0"
+         app:layout_constraintBottom_toBottomOf="parent">
+     </Constraint>
+@@ -157,7 +167,7 @@
+         android:layout_marginBottom="@dimen/qs_media_panel_outer_padding"
+         app:layout_constraintLeft_toRightOf="@id/action1"
+         app:layout_constraintRight_toLeftOf="@id/action3"
+-        app:layout_constraintTop_toBottomOf="@id/media_progress_bar"
++        app:layout_constraintTop_toTopOf="@id/action0"
+         app:layout_constraintBottom_toBottomOf="parent">
+     </Constraint>
+ 
+@@ -169,7 +179,7 @@
+         android:layout_marginEnd="4dp"
+         app:layout_constraintLeft_toRightOf="@id/action2"
+         app:layout_constraintRight_toLeftOf="@id/action4"
+-        app:layout_constraintTop_toBottomOf="@id/media_progress_bar"
++        app:layout_constraintTop_toTopOf="@id/action0"
+         android:layout_marginBottom="@dimen/qs_media_panel_outer_padding"
+         app:layout_constraintBottom_toBottomOf="parent">
+     </Constraint>
+@@ -179,12 +189,12 @@
+         android:layout_width="48dp"
+         android:layout_height="48dp"
+         android:layout_marginStart="4dp"
+-        android:layout_marginEnd="@dimen/qs_media_panel_outer_padding"
++        android:layout_marginEnd="4dp"
+         android:layout_marginBottom="@dimen/qs_media_panel_outer_padding"
+         app:layout_constraintHorizontal_chainStyle="packed"
+         app:layout_constraintLeft_toRightOf="@id/action3"
+         app:layout_constraintRight_toRightOf="parent"
+-        app:layout_constraintTop_toBottomOf="@id/media_progress_bar"
++        app:layout_constraintTop_toTopOf="@id/action0"
+         app:layout_constraintBottom_toBottomOf="parent">
+     </Constraint>
+ </ConstraintSet>
+diff --git a/packages/SystemUI/src/com/android/systemui/media/MediaControlPanel.java b/packages/SystemUI/src/com/android/systemui/media/MediaControlPanel.java
+index 016cb06a508..2bf75f2ddb0 100644
+--- a/packages/SystemUI/src/com/android/systemui/media/MediaControlPanel.java
++++ b/packages/SystemUI/src/com/android/systemui/media/MediaControlPanel.java
+@@ -264,6 +264,10 @@ public class MediaControlPanel {
+         TextView titleText = mViewHolder.getTitleText();
+         titleText.setText(safeCharSequence(data.getSong()));
+ 
++        // App title
++        TextView appName = mViewHolder.getAppName();
++        appName.setText(data.getApp());
++
+         // Artist name
+         TextView artistText = mViewHolder.getArtistText();
+         artistText.setText(safeCharSequence(data.getArtist()));
+diff --git a/packages/SystemUI/src/com/android/systemui/media/PlayerViewHolder.kt b/packages/SystemUI/src/com/android/systemui/media/PlayerViewHolder.kt
+index 2a21ceee5db..16327bd9064 100644
+--- a/packages/SystemUI/src/com/android/systemui/media/PlayerViewHolder.kt
++++ b/packages/SystemUI/src/com/android/systemui/media/PlayerViewHolder.kt
+@@ -35,6 +35,7 @@ class PlayerViewHolder private constructor(itemView: View) {
+ 
+     // Player information
+     val appIcon = itemView.requireViewById<ImageView>(R.id.icon)
++    val appName = itemView.requireViewById<TextView>(R.id.app_name)
+     val albumView = itemView.requireViewById<ImageView>(R.id.album_art)
+     val titleText = itemView.requireViewById<TextView>(R.id.header_title)
+     val artistText = itemView.requireViewById<TextView>(R.id.header_artist)
+@@ -114,6 +115,7 @@ class PlayerViewHolder private constructor(itemView: View) {
+ 
+         val controlsIds = setOf(
+                 R.id.icon,
++                R.id.app_name,
+                 R.id.album_art,
+                 R.id.header_title,
+                 R.id.header_artist,
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/notification/row/DungeonRow.kt b/packages/SystemUI/src/com/android/systemui/statusbar/notification/row/DungeonRow.kt
+index 5151c38873d..dbfa27f1f68 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/notification/row/DungeonRow.kt
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/notification/row/DungeonRow.kt
+@@ -32,6 +32,10 @@ class DungeonRow(context: Context, attrs: AttributeSet) : LinearLayout(context,
+         }
+ 
+     private fun update() {
++        (findViewById(R.id.app_name) as TextView).apply {
++            text = entry?.row?.appName
++        }
++
+         (findViewById(R.id.icon) as StatusBarIconView).apply {
+             set(entry?.icons?.statusBarIcon?.statusBarIcon)
+         }
+-- 
+2.25.1
+

@@ -1,0 +1,51 @@
+From e127854c0691989289a4dc5f6c6b84f7b2f6893c Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Wed, 13 Oct 2021 02:38:02 +0000
+Subject: [PATCH 04/14] Revert "init: Weaken property override security for the
+ init extension"
+
+This reverts commit 59433f8af8b463d61a972cd1c027a16465537113.
+---
+ init/property_service.cpp | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
+
+diff --git a/init/property_service.cpp b/init/property_service.cpp
+index c46256ab3..019955b16 100644
+--- a/init/property_service.cpp
++++ b/init/property_service.cpp
+@@ -102,8 +102,6 @@ static std::thread property_service_thread;
+ 
+ static PropertyInfoAreaFile property_info_area;
+ 
+-static bool weaken_prop_override_security = false;
+-
+ struct PropertyAuditData {
+     const ucred* cr;
+     const char* name;
+@@ -179,8 +177,8 @@ static uint32_t PropertySet(const std::string& name, const std::string& value, s
+ 
+     prop_info* pi = (prop_info*) __system_property_find(name.c_str());
+     if (pi != nullptr) {
+-        // ro.* properties are actually "write-once", unless the system decides to
+-        if (StartsWith(name, "ro.") && !weaken_prop_override_security) {
++        // ro.* properties are actually "write-once".
++        if (StartsWith(name, "ro.")) {
+             *error = "Read-only property was already set";
+             return PROP_ERROR_READ_ONLY_PROPERTY;
+         }
+@@ -977,12 +975,6 @@ void PropertyLoadBootDefaults() {
+         }
+     }
+ 
+-    // Weaken property override security during execution of the vendor init extension
+-    weaken_prop_override_security = true;
+-
+-    // Restore the normal property override security after init extension is executed
+-    weaken_prop_override_security = false;
+-
+     property_initialize_ro_product_props();
+     property_derive_build_fingerprint();
+     property_initialize_ro_cpu_abilist();
+-- 
+2.25.1
+

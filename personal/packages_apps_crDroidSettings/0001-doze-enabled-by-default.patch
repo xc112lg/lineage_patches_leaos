@@ -1,0 +1,27 @@
+From 2c51b536ea77565f6bf4e2d4aa0ecdbc05768517 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sat, 28 Mar 2020 19:01:45 +0200
+Subject: [PATCH 1/2] doze enabled by default
+
+	modified:   res/xml/doze_settings.xml
+---
+ res/xml/doze_settings.xml | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/res/xml/doze_settings.xml b/res/xml/doze_settings.xml
+index f86cec82..3f373bc4 100644
+--- a/res/xml/doze_settings.xml
++++ b/res/xml/doze_settings.xml
+@@ -21,7 +21,8 @@
+     <com.crdroid.settings.preferences.SecureSettingSwitchPreference
+         android:key="doze_enabled"
+         android:title="@string/doze_title"
+-        android:summary="@string/doze_summary" />
++        android:summary="@string/doze_summary"
++        android:defaultValue="true" />
+ 
+     <com.crdroid.settings.preferences.SecureSettingSwitchPreference
+         android:key="doze_always_on"
+-- 
+2.25.1
+

@@ -1,0 +1,32 @@
+From 2f4909fb9cb5a9dd6f997302f49ca9ae30ee3b22 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 19:27:17 +0000
+Subject: [PATCH 25/52] Revert "FODCircleView: Hide animation when auth fails"
+
+This reverts commit 47e53bc0ac1f02a50dbcb1d0c486e05aa57e91dd.
+---
+ .../com/android/systemui/biometrics/FODCircleView.java    | 8 --------
+ 1 file changed, 8 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index 1e24f4942ae..fe43dc76bc4 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -234,14 +234,6 @@ public class FODCircleView extends ImageView implements TunerService.Tunable {
+             }
+             mScreenTurnedOn = true;
+         }
+-
+-        @Override
+-        public void onBiometricHelp(int msgId, String helpString,
+-                BiometricSourceType biometricSourceType) {
+-            if (msgId == -1){ // Auth error
+-                mHandler.post(() -> mFODAnimation.hideFODanimation());
+-            }
+-        }
+     };
+ 
+     public FODCircleView(Context context) {
+-- 
+2.30.2
+

@@ -1,0 +1,39 @@
+From 9b3cb3bbe8115c1b1a9fc2c2577bf3841fc05baa Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 18:57:24 +0000
+Subject: [PATCH 09/52] Revert "FODCircleView: Do not skip mIsBiometricRunning
+ when screen turned on"
+
+This reverts commit b0a16ef3fd841e5c94c14381eb2acae837628658.
+---
+ .../android/systemui/biometrics/FODCircleView.java | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index d70c260f29a..fdc18c53d2a 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -278,14 +278,12 @@ public class FODCircleView extends ImageView implements TunerService.Tunable {
+ 
+         @Override
+         public void onScreenTurnedOn() {
+-            if (mIsBiometricRunning) {
+-                if (!mFodGestureEnable) {
+-                    show();
+-                } else if (mPressPending) {
+-                    mHandler.post(() -> showCircle());
+-                    mPressPending = false;
+-                }
+-            }    
++            if (mIsBiometricRunning && !mFodGestureEnable) {
++                show();
++            } else if (mFodGestureEnable && mPressPending) {
++                mHandler.post(() -> showCircle());
++                mPressPending = false;
++            }
+             mScreenTurnedOn = true;
+         }
+ 
+-- 
+2.30.2
+

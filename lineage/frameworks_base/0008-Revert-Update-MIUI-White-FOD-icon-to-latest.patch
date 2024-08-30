@@ -1,0 +1,76 @@
+From dcddf0342b4b7b394148b622e00b51c42a03916f Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 18:57:23 +0000
+Subject: [PATCH 08/52] Revert "Update MIUI White FOD icon to latest"
+
+This reverts commit eb310390dd8e56f034f819005dd31d4e769c4a0c.
+---
+ .../res/drawable-nodpi/fod_icon_pressed.webp  | Bin 2054 -> 1040 bytes
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+
+diff --git a/packages/SystemUI/res/drawable-nodpi/fod_icon_pressed.webp b/packages/SystemUI/res/drawable-nodpi/fod_icon_pressed.webp
+index 43c2ef6dbe80440582338547527abbb48d6671bd..d82fdf8db0f655288f159c369047a319d3db8790 100644
+GIT binary patch
+literal 1040
+zcmV+r1n>J&Nk&Ep1ONb6MM6+kP&il$0000G0002J006xJ06|PpNLm5_00AGMkZlBL
+z{*?E5oJK?h*C0pQ_PA~SVMo|WPNB8RWx(N}VyW>da0&F;wBZOjo`mK9U+=CW`tQh*
+z+_-63ASe#!B09?#M73srUrDGHb12D<+P+>_M{V}G?e;U6xlA2=HlGFGBRS%XJo+^$
+z@Ou+aUc+%PMpdvyHbiCgUT<>oTCVmxr|$lj*RP#Ltri>9YO!98ii3$XD05S)?M9mq
+zMvnR+F^q~Px2BpLPK(@Vs&X}&_A7AV0C4PAfI_#z7NRE@drDY%Ksff4h_ItXgzXAk
+zSRhtyB_nJrVc`VfYa)hgb;6Ac#;Vl`H_jNT<%L-_I@!kPImX%xwpu_|wHItPgQVIE
+zwwgfvorvO!YbP0b$}xclWkFe$V*(G#jFO&(z%syN<^3}t5ynaMEaNNS7tBr;nAI!b
+z0CSWXCcOg$n!(fS>xUn_(bog~=jyxry~BSmzdgSz_}@iu&+j_^cj?Rjoy`Ake+~a5
+z4)ALs@Zhd){DQ|;;K3T7hY21-c(8^$fgLM&P?88dD93_@9TRv^b_J2WcKG65fdtg6
+zup+%mE7A+LT2=faz2HVyAs9nV;JoTat`lxtHTcDK!i}zh1WefwQcAe6YZ9rK6c)NB
+z5+G$$$SB)FMhO>O2MI`}Qy?mEVb>)FYksSAQ+wV|i5xX8a?&&n8ZIWTB5>+d$djde
+z(DBROtr!*Kkf_8qH7YKmQfyKy#mcZ3F$8tA1UQOhjY}P=yH8Gx>(V{SVqRHwW<1L6
+zeLEwb&Ssuax@9NSy5#&n=Pc;@DcU7gP&gon0RR9H6abw8D!u@|06uLtnMkBED<LEi
+z$g)5UiD_=(aWLZZi~i^c+f4SE?K9eEw9jdt%^;T)FjL+pYh0@1$s!PH07mYO1irB9
+zs&Y=DfI&Gi54S46z#T-T7b)<QX54ekzC3wS{@0opHm{yV+CtPI%jI}+3yPx*FGaJM
+zQ=|Z>ffAI9vHt4>prIO4ow532c+Vo5+}?!p%(aq4@rmv+;}gawj86st0RI0JKmY(G
+z>I>UKoHaFfl9IAHv$c%%!*d7rp+4}=tNGw7KV9L>iVxkT;}&p7oQK`nI_GEals4vZ
+zb&PtUM%bEA#7=-kCcSd7)!;FH(QZQPU+HPAeZ1J)7m41?Wb)ag1R7%U{|M{LB^<-5
+zkvCcp)B~GZ|F$%fsh~v`9m*{3I^y)W(^M2Cv#=DLWhmt_cYwiU3-%{+OkVj!Eu=+^
+zErv3hRu`iLJfRn&yhe}jUJ>qz{}pw-dtC1r->|?=3c{)FDsxVy|G^eZl@{buOK?w^
+K000000002$cIsaM
+
+literal 2054
+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
+B43z)?
+
+-- 
+2.30.2
+

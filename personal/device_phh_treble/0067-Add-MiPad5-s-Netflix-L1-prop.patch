@@ -1,0 +1,25 @@
+From 07dc99e211b81ee0e457f66972204f76b6c1ad87 Mon Sep 17 00:00:00 2001
+From: Pierre-Hugues Husson <phh@phh.me>
+Date: Sat, 19 Feb 2022 12:38:34 -0500
+Subject: [PATCH 67/81] Add MiPad5's Netflix L1 prop
+
+---
+ rw-system.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rw-system.sh b/rw-system.sh
+index b18c617..f859bf2 100644
+--- a/rw-system.sh
++++ b/rw-system.sh
+@@ -1002,7 +1002,7 @@ fi
+ 
+ resetprop_phh ro.bluetooth.library_name libbluetooth.so
+ 
+-if getprop ro.vendor.build.fingerprint |grep -iq xiaomi/cepheus;then
++if getprop ro.vendor.build.fingerprint |grep -iq xiaomi/cepheus -e xiaomi/nabu;then
+     setprop ro.netflix.bsp_rev Q855-16947-1
+ fi
+ 
+-- 
+2.25.1
+

@@ -1,0 +1,28 @@
+From 7b2154f1e5c30218f281a3e0989bd56fc85eae3a Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Tue, 12 May 2020 18:47:06 +0300
+Subject: [PATCH 14/31] add French translation
+
+  * merci https://github.com/Aarqw12
+
+Change-Id: I3d22fc4c81783644fe23a4fd873f90c15511edb8
+---
+ res/values-fr/custom_strings.xml | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/res/values-fr/custom_strings.xml b/res/values-fr/custom_strings.xml
+index 564f12c362..96105620cf 100644
+--- a/res/values-fr/custom_strings.xml
++++ b/res/values-fr/custom_strings.xml
+@@ -31,4 +31,8 @@
+     <string name="theme_customization_statusbar_title">espacement de la barre de statut</string>
+     <!-- [CHAR_LIMIT=NONE] Developer Settings: Title of the setting which enables overlays to customize the SystemUI speed performance -->
+     <string name="theme_customization_speedui_title">vitesse graphiques de l\'icones/economie d\'énergie</string>
++    <!-- for all CAOS/LOSQ specific translation merci https://github.com/Aarqw12 -->
++    <string name="theme_customization_accent_color_title">les Dégradés de couleurs</string>
++    <string name="theme_customization_font_title">Headline /les thèmes de fonds</string>
++    <string name="theme_customization_icon_shape_title">forme des icones</string>
+ </resources>
+-- 
+2.25.1
+

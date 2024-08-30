@@ -1,0 +1,22 @@
+From 0e491970e902de3cc82e1268e019d8ccb171614b Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Mon, 20 Sep 2021 09:28:14 +0000
+Subject: [PATCH] translate "Mark as read" for Russian
+
+---
+ res/values-ru/cm_strings.xml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/res/values-ru/cm_strings.xml b/res/values-ru/cm_strings.xml
+index c93ed4c..40a2335 100644
+--- a/res/values-ru/cm_strings.xml
++++ b/res/values-ru/cm_strings.xml
+@@ -20,4 +20,5 @@
+     <string name="show_emoticons_pref_title">Доступ к смайлам</string>
+     <string name="show_emoticons_pref_summary">Показать кнопку смайлов на клавиатуре</string>
+     <string name="notification_channel_messages_title">Сообщения</string>
++    <string name="notification_mark_as_read">Прочитанное</string>
+ </resources>
+-- 
+2.30.2
+

@@ -1,0 +1,26 @@
+From 790cb12924d23cbbe8f3bd7f8e8bf5ad4209a458 Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 19:27:23 +0000
+Subject: [PATCH 28/52] Revert "SystemUI: Add OP8T Cyberpunk 2077 FOD animation
+ [1/2]"
+
+This reverts commit 299f9e3aa648a786d524a3cf681dd3d34e4aed46.
+---
+ .../src/com/android/systemui/biometrics/FODAnimation.java        | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java
+index c08033ec87f..a1525f2eb1e 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODAnimation.java
+@@ -57,7 +57,6 @@ public class FODAnimation extends ImageView {
+         R.drawable.fod_op_energy_recognizing_anim,
+         R.drawable.fod_op_mclaren_recognizing_anim,
+         R.drawable.fod_op_ripple_recognizing_anim,
+-        R.drawable.fod_op_scanning_recognizing_anim,
+         R.drawable.fod_op_stripe_recognizing_anim,
+         R.drawable.fod_op_wave_recognizing_anim,
+         R.drawable.fod_pureview_dna_recognizing_anim,
+-- 
+2.30.2
+

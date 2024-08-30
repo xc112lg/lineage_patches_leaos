@@ -1,0 +1,64 @@
+From 83178ca938f96ce3a4488e71ed0704844b244df9 Mon Sep 17 00:00:00 2001
+From: zhangjianqiu <zhangjianqiu@oppo.com>
+Date: Tue, 16 Nov 2021 16:46:13 +0800
+Subject: [PATCH 115/115] Zygote: Fix an issue when empty the usap pool.
+
+When empty the usap pool, the usap processes may be blocked by
+usapPoolSocket.accept(), which cause the usap process fail to kill
+immediately. So we can move the position of blockSigTerm after
+usapPoolsSocket.accept() and delele the old blockSigTerm in the while
+loop.
+
+Test: manual test.
+1.setprop persist.device_config.runtime_native.usap_pool_enabled true.
+After 1 min, trigger fill usap pools.
+2.setprop persist.device_config.runtime_native.usap_pool_enabled false.
+After 1 min, trigger empty usap pools.
+3.repeat step 1.
+
+Signed-off-by: zhangjianqiu <zhangjianqiu@oppo.com>
+Change-Id: I657940b30f71cdc717c673be6d70738e61e2bb68
+---
+ core/java/com/android/internal/os/Zygote.java | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/core/java/com/android/internal/os/Zygote.java b/core/java/com/android/internal/os/Zygote.java
+index bd703553f3b..d632040ca31 100644
+--- a/core/java/com/android/internal/os/Zygote.java
++++ b/core/java/com/android/internal/os/Zygote.java
+@@ -723,9 +723,6 @@ public final class Zygote {
+         DataOutputStream usapOutputStream = null;
+         ZygoteArguments args = null;
+ 
+-        // Block SIGTERM so we won't be killed if the Zygote flushes the USAP pool.
+-        blockSigTerm();
+-
+         LocalSocket sessionSocket = null;
+         if (argBuffer == null) {
+             // Read arguments from usapPoolSocket instead.
+@@ -741,6 +738,10 @@ public final class Zygote {
+                 ZygoteCommandBuffer tmpArgBuffer = null;
+                 try {
+                     sessionSocket = usapPoolSocket.accept();
++                    // Block SIGTERM so we won't be killed if the Zygote flushes the USAP pool.
++                    // This is safe from a race condition because the pool is only flushed after
++                    // the SystemServer changes its internal state to stop using the USAP pool.
++                    blockSigTerm();
+ 
+                     usapOutputStream =
+                             new DataOutputStream(sessionSocket.getOutputStream());
+@@ -758,9 +759,10 @@ public final class Zygote {
+                 unblockSigTerm();
+                 IoUtils.closeQuietly(sessionSocket);
+                 IoUtils.closeQuietly(tmpArgBuffer);
+-                blockSigTerm();
+             }
+         } else {
++            // Block SIGTERM so we won't be killed if the Zygote flushes the USAP pool.
++            blockSigTerm();
+             try {
+                 args = ZygoteArguments.getInstance(argBuffer);
+             } catch (Exception ex) {
+-- 
+2.25.1
+

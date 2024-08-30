@@ -1,0 +1,64 @@
+From 1ec53cf0745e3ce75c18dddc3b402b644d4e981f Mon Sep 17 00:00:00 2001
+From: Victor Bo <bvoid@yandex.ru>
+Date: Sun, 19 Sep 2021 19:43:45 +0000
+Subject: [PATCH 46/52] Revert "FODCircleView: detect touch outside and take
+ action accordingly"
+
+This reverts commit 05bdcba7cce83ba0f6ec87e1ff6dfbd9d352072b.
+---
+ .../systemui/biometrics/FODCircleView.java        | 15 +++------------
+ 1 file changed, 3 insertions(+), 12 deletions(-)
+
+diff --git a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+index db2ab659709..4012e6112af 100644
+--- a/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
++++ b/packages/SystemUI/src/com/android/systemui/biometrics/FODCircleView.java
+@@ -78,7 +78,6 @@ public class FODCircleView extends ImageView {
+     private boolean mIsCircleShowing;
+     private boolean mIsDreaming;
+     private boolean mIsKeyguard;
+-    private boolean mTouchedOutside;
+ 
+     private Handler mHandler;
+ 
+@@ -228,13 +227,11 @@ public class FODCircleView extends ImageView {
+         mParams.packageName = "android";
+         mParams.type = WindowManager.LayoutParams.TYPE_DISPLAY_OVERLAY;
+         mParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+-                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
+-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
++                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
+         mParams.gravity = Gravity.TOP | Gravity.LEFT;
+ 
+         mPressedParams.copyFrom(mParams);
+-        mPressedParams.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND |
+-                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
++        mPressedParams.flags |= WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+ 
+         mParams.setTitle("Fingerprint on display");
+         mPressedParams.setTitle("Fingerprint on display.touched");
+@@ -275,12 +272,6 @@ public class FODCircleView extends ImageView {
+         float y = event.getAxisValue(MotionEvent.AXIS_Y);
+ 
+         boolean newIsInside = (x > 0 && x < mSize) && (y > 0 && y < mSize);
+-        mTouchedOutside = false;
+-
+-        if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+-            mTouchedOutside = true;
+-            return true;
+-        }
+ 
+         if (event.getAction() == MotionEvent.ACTION_DOWN && newIsInside) {
+             showCircle();
+@@ -355,7 +346,7 @@ public class FODCircleView extends ImageView {
+     }
+ 
+     public void showCircle() {
+-        if (mFading || mTouchedOutside) return;
++        if (mFading) return;
+         mIsCircleShowing = true;
+ 
+         setKeepScreenOn(true);
+-- 
+2.30.2
+
